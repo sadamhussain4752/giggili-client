@@ -1,20 +1,23 @@
 import React from 'react';
-import Image from 'next/image';
+import Image, { StaticImageData } from 'next/image';
 import Link from 'next/link';
-
+interface ImageCardProps {
+  src: StaticImageData;
+  size: boolean;
+}
 const Hero = () => {
   return (
-    <section className="w-full bg-background py-10">
+    <section className="w-full bg-[#FFF9F3] py-12">
       <div className="container mx-auto px-4 grid md:grid-cols-2 gap-8 items-center">
-        <div className="space-y-6">
-          <h1 className="text-4xl md:text-5xl font-bold leading-tight text-foreground">
-            ENTERTAINMENT <br />
-            DELIVERED TO YOUR <br />
-            DOORSTEP
+        {/* Left Side */}
+        <div className="space-y-8">
+          <h1 className="text-3xl md:text-4xl font-bold text-[#222] leading-snug">
+            Entertainment Delivered <br />
+            To Your Doorstep
           </h1>
 
-          <div className="mt-8">
-            <h3 className="text-lg font-medium mb-4">What are you looking for?</h3>
+          <div className="bg-white rounded-xl shadow-md p-6 border border-[#f3d9c1] max-w-md">
+            <h3 className="text-md font-semibold text-start mb-6">What are you looking for?</h3>
             <div className="grid grid-cols-3 gap-4">
               <CategoryCard
                 title="DJ"
@@ -50,38 +53,57 @@ const Hero = () => {
           </div>
         </div>
 
-        <div className="relative min-h-[300px] md:min-h-[400px] flex items-center justify-center">
-          <div className="relative w-[90%] h-[300px] md:h-[400px]">
-            <Image
-              src="https://ext.same-assets.com/1887355265/1742656969.jpeg"
-              alt="DJ Performance"
-              fill
-              className="object-cover rounded-md"
-            />
-          </div>
-          <div className="absolute -top-4 -left-4 w-[90%] h-[300px] md:h-[400px] border-2 border-primary rounded-md -z-10" />
-        </div>
+        {/* Right Side - Image Grid */}
+        <div className="columns-1 sm:columns-2 gap-4">
+  <ImageCard src={require("../../asset/Rectangle 1.png")} size={true} />
+  <ImageCard src={require("../../asset/Rectangle 2.png")} size={false} />
+  <ImageCard src={require("../../asset/Rectangle 4.png")} size={false} />
+  <ImageCard src={require("../../asset/Rectangle 3.png")} size={true} />
+</div>
+
       </div>
     </section>
   );
 };
 
-const CategoryCard = ({ title, iconSrc, href }: { title: string; iconSrc: string; href: string }) => {
+const CategoryCard = ({
+  title,
+  iconSrc,
+  href,
+}: {
+  title: string;
+  iconSrc: string;
+  href: string;
+}) => {
   return (
     <Link href={href} className="group">
-      <div className="flex flex-col items-center justify-center p-4 border border-[#e6e6e6] rounded-md bg-white hover:border-primary transition-colors">
-        <div className="w-12 h-12 relative mb-2">
-          <Image
-            src={iconSrc}
-            alt={title}
-            fill
-            className="object-contain"
-          />
+      <div className="flex flex-col items-center justify-center p-3 border border-[#ffffff] rounded-lg bg-white hover:border-[#f97316] transition">
+        <div className="w-10 h-10 relative mb-2">
+          <Image src={iconSrc} alt={title} fill className="object-contain" />
         </div>
-        <h4 className="text-sm font-medium text-center">{title}</h4>
+        <h4 className="text-sm text-center font-medium text-[#333]">{title}</h4>
       </div>
     </Link>
   );
 };
+
+const ImageCard: React.FC<ImageCardProps> = ({ src, size }) => (
+  <div
+    className={`relative mb-4 overflow-hidden rounded-lg ${
+      size ? 'h-[400px]' : 'h-[290px]'
+    }`}
+  >
+    <Image
+      src={src}
+      alt="Performer"
+      fill
+      className="object-cover rounded-lg"
+    />
+  </div>
+);
+
+
+
+
 
 export default Hero;

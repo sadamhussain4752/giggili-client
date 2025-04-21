@@ -177,8 +177,10 @@ export default function ArtistDetailPage({ params }: Props) {
                   </li>
                 ))}
               </ul>
-
-              <Button className="w-full">Book Now</Button>
+             <Link  href={`/checkout`}>
+             <Button className="w-full">Book Now</Button>
+             </Link>
+              
             </CardContent>
           </Card>
         </div>

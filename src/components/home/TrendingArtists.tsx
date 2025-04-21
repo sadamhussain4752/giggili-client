@@ -12,7 +12,7 @@ const TRENDING_ARTISTS = [
     genres: ['Bollywood and Punjabi', 'Retro'],
     location: 'Bangalore, India',
     price: '₹0.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
     slug: 'nayab-the-band'
   },
   {
@@ -21,7 +21,7 @@ const TRENDING_ARTISTS = [
     genres: ['Bollywood and Punjabi', 'English commercial', 'Retro'],
     location: 'Bangalore, India',
     price: '₹0.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
     slug: 'dj-basavaraj'
   },
   {
@@ -30,7 +30,7 @@ const TRENDING_ARTISTS = [
     genres: ['Bollywood and Punjabi', 'House and Techno', 'English commercial'],
     location: 'Bangalore, India',
     price: '₹4,999.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
     slug: 'testsadas'
   },
   {
@@ -50,6 +50,21 @@ const TrendingArtists = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold">Trending Artists</h2>
+          <Link href="/service-list" className="text-sm text-primary flex items-center gap-1 hover:underline">
+            View All <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {TRENDING_ARTISTS.map((artist) => (
+            <ArtistCard key={artist.id} artist={artist} />
+          ))}
+        </div>
+      </div>
+
+      <div className="container mx-auto px-4 mt-10">
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold">Most Booked Artists</h2>
           <Link href="/service-list" className="text-sm text-primary flex items-center gap-1 hover:underline">
             View All <ChevronRight className="w-4 h-4" />
           </Link>

@@ -1,5 +1,6 @@
 /* Import the required fonts */
 @import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Source+Sans+Pro:wght@400;600&display=swap');
+@import 'keen-slider/keen-slider.min.css';
 
 @tailwind base;
 @tailwind components;
@@ -86,3 +87,30 @@
     font-family: var(--font-body);
   }
 }
+
+.border-color-1 {
+  border-color: #FF6B2C ;
+  border-width: 1px;
+
+}
+/* Custom banner image height styles */
+
+.top-banner-1 {
+  position: relative;
+  max-height: 100%;
+  object-fit: cover;
+  top: 1rem;       /* equivalent to top-4 in Tailwind */
+}
+
+@media (min-width: 768px) {
+  .top-banner-1 {
+    top: 1.5rem;    /* equivalent to md:top-6 in Tailwind */
+  }
+}
+
+.top-banner-2 {
+  position: relative;
+  max-height: 70%;
+  object-fit: cover;
+}
+

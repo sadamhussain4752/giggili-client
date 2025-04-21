@@ -35,31 +35,7 @@ const Footer = () => {
           </div>
 
           {/* Quick Links */}
-          <div className="space-y-4">
-            <h3 className="font-medium mb-4 text-foreground">Quick Links</h3>
-            <ul className="space-y-2">
-              <li>
-                <Link href="/" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Home
-                </Link>
-              </li>
-              <li>
-                <Link href="/about" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  About
-                </Link>
-              </li>
-              <li>
-                <Link href="/service-list" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Service List
-                </Link>
-              </li>
-              <li>
-                <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Contact
-                </Link>
-              </li>
-            </ul>
-          </div>
+        
 
           {/* Company */}
           <div className="space-y-4">
@@ -118,6 +94,27 @@ const Footer = () => {
             </ul>
 
             {/* Social Media Links */}
+            <div className="flex space-x-4 mt-4">
+              <Link href="https://www.facebook.com/profile.php?id=61568805868280" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                <Facebook className="w-5 h-5" />
+              </Link>
+              <Link href="https://www.instagram.com/giggili_?igsh=cDMyazRkbXJkaXRt" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                <Instagram className="w-5 h-5" />
+              </Link>
+              <Link href="https://x.com/search?q=Giggili&src=typed_query" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                <Twitter className="w-5 h-5" />
+              </Link>
+              <Link href="https://www.linkedin.com/company/giggili/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                <Linkedin className="w-5 h-5" />
+              </Link>
+              <Link href="https://www.youtube.com/@Giggili" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+                <Youtube className="w-5 h-5" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="font-medium mb-4 text-foreground">Social Links</h3>
             <div className="flex space-x-4 mt-4">
               <Link href="https://www.facebook.com/profile.php?id=61568805868280" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Facebook className="w-5 h-5" />

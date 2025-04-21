@@ -2,6 +2,7 @@ import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
+import CenteredBanner from './CenteredBanner'; // adjust path as needed
 
 // Define artist type
 type Artist = {
@@ -18,13 +19,14 @@ const REGIONS = [
   {
     id: 'north',
     name: 'North Bangalore',
+    image:require("../../asset/banner2.png"),
     artists: [
       {
         id: 101,
         name: 'Dj Harsh Bhutani',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-harsh-bhutani'
       },
       {
@@ -32,7 +34,7 @@ const REGIONS = [
         name: 'Dj Nick8',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-nick8'
       },
       {
@@ -40,7 +42,7 @@ const REGIONS = [
         name: 'DJ VIJJU',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-vijju'
       },
       {
@@ -48,7 +50,7 @@ const REGIONS = [
         name: 'Dj yash',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-yash'
       }
     ]
@@ -56,13 +58,15 @@ const REGIONS = [
   {
     id: 'east',
     name: 'East Bangalore',
+    image:require("../../asset/banner3.png"),
+
     artists: [
       {
         id: 201,
         name: 'Vipul Khurana',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/125209397.jpeg',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'vipul-khurana'
       },
       {
@@ -70,7 +74,7 @@ const REGIONS = [
         name: 'DJ Vihaan',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-vihaan'
       },
       {
@@ -78,7 +82,7 @@ const REGIONS = [
         name: 'DJ Rauny',
         location: 'Bangalore, India',
         price: '₹4,999.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-rauny'
       },
       {
@@ -86,7 +90,7 @@ const REGIONS = [
         name: 'DJ Ansh',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-ansh'
       }
     ]
@@ -94,13 +98,15 @@ const REGIONS = [
   {
     id: 'south',
     name: 'South Bangalore',
+    image:require("../../asset/banner4.png"),
+
     artists: [
       {
         id: 301,
         name: 'Saket Maskara',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'saket-maskara'
       },
       {
@@ -108,7 +114,7 @@ const REGIONS = [
         name: 'AKSHAR',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'akshar'
       },
       {
@@ -116,7 +122,7 @@ const REGIONS = [
         name: 'DJ VARUN',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-varun'
       },
       {
@@ -124,7 +130,7 @@ const REGIONS = [
         name: 'DJ Massy',
         location: 'Bangalore, India',
         price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/406590761.png',
+        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
         slug: 'dj-massy'
       }
     ]
@@ -143,6 +149,8 @@ const RegionalArtists = () => {
                 <ArtistCard key={artist.id} artist={artist} />
               ))}
             </div>
+
+            <CenteredBanner src={region.image} />
           </div>
         ))}
       </div>
@@ -166,11 +174,29 @@ const ArtistCard = ({ artist }: { artist: Artist }) => {
           </div>
         </div>
         <CardContent className="p-4">
-          <h3 className="font-semibold text-lg text-foreground mb-1">{artist.name}</h3>
+          <h3 className="font-semibold text-lg text-foreground mb-1">
+            {artist.name}
+          </h3>
           <p className="text-xs flex items-center gap-1 text-muted-foreground">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-3 h-3">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+              className="w-3 h-3"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
             {artist.location}
           </p>
