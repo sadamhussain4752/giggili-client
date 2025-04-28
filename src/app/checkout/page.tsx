@@ -59,25 +59,32 @@ const CheckoutPage = () => {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Left Side - Form */}
         <div className="space-y-6">
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">Event Country</label>
-              <Input placeholder="India" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Event City</label>
-              <Input placeholder="Bangalore" />
-            </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">Event Area</label>
-              <Input placeholder="Select Area" />
-            </div>
-          </div>
+  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+    <div>
+      <label className="block text-sm font-medium mb-1">Event Country</label>
+      <Input placeholder="India" />
+    </div>
+    <div>
+      <label className="block text-sm font-medium mb-1">Event City</label>
+      <Input placeholder="Bangalore" />
+    </div>
+    <div>
+      <label className="block text-sm font-medium mb-1">Event Area</label>
+      <select className="w-full border px-4 py-2 rounded-md">
+        <option value="">Select Area</option>
+        <option value="north-bangalore">North Bangalore</option>
+        <option value="south-bangalore">South Bangalore</option>
+        <option value="east-bangalore">East Bangalore</option>
+        <option value="west-bangalore">West Bangalore</option>
+      </select>
+    </div>
+  </div>
 
-          <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
-            Sign In
-          </Button>
-        </div>
+  <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
+    Sign In
+  </Button>
+</div>
+
 
         {/* Right Side - Booking Summary */}
         <div className="border p-6 rounded-xl shadow-md">

@@ -22,32 +22,32 @@ const Hero = () => {
               <CategoryCard
                 title="DJ"
                 iconSrc="https://ext.same-assets.com/1887355265/2244096686.png"
-                href="/service-list/category/dj"
+                href="/category/dj"
               />
               <CategoryCard
                 title="Live Singer"
                 iconSrc="https://ext.same-assets.com/1887355265/108643548.png"
-                href="/service-list/category/live-singer"
+                href="/category/live-singer"
               />
               <CategoryCard
                 title="Band"
                 iconSrc="https://ext.same-assets.com/1887355265/1389202622.png"
-                href="/service-list/category/band"
+                href="/category/band"
               />
               <CategoryCard
                 title="Musician"
                 iconSrc="https://ext.same-assets.com/1887355265/2072431407.png"
-                href="/service-list/category/musician"
+                href="/category/musician"
               />
               <CategoryCard
                 title="Karaoke"
                 iconSrc="https://ext.same-assets.com/1887355265/2759589883.png"
-                href="/service-list/category/karaoke"
+                href="/category/karaoke"
               />
               <CategoryCard
                 title="Sufi"
                 iconSrc="https://ext.same-assets.com/1887355265/3277607109.png"
-                href="/service-list/category/sufi"
+                href="/category/sufi"
               />
             </div>
           </div>
@@ -90,7 +90,7 @@ const CategoryCard = ({
 const ImageCard: React.FC<ImageCardProps> = ({ src, size }) => (
   <div
     className={`relative mb-4 overflow-hidden rounded-lg ${
-      size ? 'h-[400px]' : 'h-[290px]'
+      size ? 'h-[350px]' : 'h-[250px]'
     }`}
   >
     <Image

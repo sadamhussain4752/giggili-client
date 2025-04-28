@@ -3,6 +3,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { Card, CardContent } from '@/components/ui/card';
 import CenteredBanner from './CenteredBanner'; // adjust path as needed
+import { useDispatch, useSelector } from "react-redux";
 
 // Define artist type
 type Artist = {
@@ -15,142 +16,29 @@ type Artist = {
 };
 
 // Artist data by region
-const REGIONS = [
-  {
-    id: 'north',
-    name: 'North Bangalore',
-    image:require("../../asset/banner2.png"),
-    artists: [
-      {
-        id: 101,
-        name: 'Dj Harsh Bhutani',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-harsh-bhutani'
-      },
-      {
-        id: 102,
-        name: 'Dj Nick8',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-nick8'
-      },
-      {
-        id: 103,
-        name: 'DJ VIJJU',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-vijju'
-      },
-      {
-        id: 104,
-        name: 'Dj yash',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-yash'
-      }
-    ]
-  },
-  {
-    id: 'east',
-    name: 'East Bangalore',
-    image:require("../../asset/banner3.png"),
 
-    artists: [
-      {
-        id: 201,
-        name: 'Vipul Khurana',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'vipul-khurana'
-      },
-      {
-        id: 202,
-        name: 'DJ Vihaan',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-vihaan'
-      },
-      {
-        id: 203,
-        name: 'DJ Rauny',
-        location: 'Bangalore, India',
-        price: '₹4,999.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-rauny'
-      },
-      {
-        id: 204,
-        name: 'DJ Ansh',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-ansh'
-      }
-    ]
-  },
-  {
-    id: 'south',
-    name: 'South Bangalore',
-    image:require("../../asset/banner4.png"),
-
-    artists: [
-      {
-        id: 301,
-        name: 'Saket Maskara',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'saket-maskara'
-      },
-      {
-        id: 302,
-        name: 'AKSHAR',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'akshar'
-      },
-      {
-        id: 303,
-        name: 'DJ VARUN',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-varun'
-      },
-      {
-        id: 304,
-        name: 'DJ Massy',
-        location: 'Bangalore, India',
-        price: '₹0.00',
-        imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-        slug: 'dj-massy'
-      }
-    ]
-  }
-];
 
 const RegionalArtists = () => {
+
+  const {
+    productlist,
+    loading: productListLoading,
+    error: productListError,
+  } = useSelector((state: any) => state.productlist);
+ console.log("productlist", productlist);
   return (
     <section className="py-8 bg-background">
       <div className="container mx-auto px-4 space-y-12">
-        {REGIONS.map((region) => (
+      {Array.isArray(productlist) && productlist.map((region) => (
           <div key={region.id} className="space-y-6">
-            <h2 className="text-xl font-bold">{region.name}</h2>
+            <h2 className="text-xl font-bold">{region.service_area}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {region.artists.map((artist) => (
+              {region.tasks.slice(0, 4).map((artist) => (
                 <ArtistCard key={artist.id} artist={artist} />
               ))}
             </div>
 
-            <CenteredBanner src={region.image} />
+            <CenteredBanner src={require("../../asset/banner2.png")} />
           </div>
         ))}
       </div>
@@ -160,22 +48,24 @@ const RegionalArtists = () => {
 
 const ArtistCard = ({ artist }: { artist: Artist }) => {
   return (
-    <Link href={`/service-list/${artist.slug}`}>
+    <Link href={`/service-list/${artist._id}`}>
       <Card className="overflow-hidden hover:shadow-md transition-shadow h-full">
         <div className="relative h-48 bg-gray-100">
           <Image
-            src={artist.imageUrl}
-            alt={artist.name}
+            src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
+            alt={artist.title}
             fill
             className="object-cover"
+            loading="lazy" // <-- this is optional in Next.js (defaults to lazy)
+            
           />
           <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
-            {artist.price}
+          ₹{" "}{artist.price}
           </div>
         </div>
         <CardContent className="p-4">
           <h3 className="font-semibold text-lg text-foreground mb-1">
-            {artist.name}
+            {artist.title}
           </h3>
           <p className="text-xs flex items-center gap-1 text-muted-foreground">
             <svg
@@ -198,7 +88,7 @@ const ArtistCard = ({ artist }: { artist: Artist }) => {
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            {artist.location}
+            {"Bangalore, India"}
           </p>
         </CardContent>
       </Card>
