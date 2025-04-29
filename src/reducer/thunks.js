@@ -106,8 +106,18 @@ const VerifyOTPURL = `${constant.baseUrl}api/task/service`;
 const GetgetCartItemProductcard = `${constant.baseUrl}api/addcart/getCartItem`;
 const CompanyAPI = `${constant.baseUrl}api/company/getCompany`; //<== admin login
 
+let token
+if (typeof window !== 'undefined') {
+  token = localStorage.getItem('tokenId');
+}
+ 
 
-
+ // Set headers with the JWT token
+ const config = {
+   headers: {
+     Authorization: `Bearer ${token}`,
+   },
+ };
 
 
 export const fetchBannerData = () => async (dispatch) => {
@@ -188,7 +198,7 @@ export const LoginUserData = (body) => async (dispatch) => {
     dispatch(LoginStoreSuccess(response.data));
   } catch (error) {
     console.log(error);
-    dispatch(LoginStoreFailure(error.response.data.message));
+    dispatch(LoginStoreFailure(error.response.data));
   }
 };
 export const ProfileUserData = (body) => async (dispatch) => {
@@ -196,7 +206,7 @@ export const ProfileUserData = (body) => async (dispatch) => {
 
   try {
     // Send the POST request with the provided body data
-    const response = await axios.get(`${Userprofile}/${body}`);
+    const response = await axios.get(`${Userprofile}`,config);
     dispatch(ProfileSuccess(response.data));
   } catch (error) {
     console.log(error);

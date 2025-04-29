@@ -1,4 +1,5 @@
-import React from 'react';
+
+import React, { useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { Button } from '@/components/ui/button';
@@ -10,8 +11,32 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { ChevronDown } from 'lucide-react';
+import { useDispatch, useSelector } from 'react-redux';
+import { ProfileUserData } from "@/reducer/thunks";
+
 
 const Navbar = () => {
+  const dispatch = useDispatch<any>();
+
+  useEffect(() => {
+    // Check if we're running on the client-side
+    if (typeof window !== "undefined") {
+      const userId : any= localStorage.getItem("tokenId");
+
+      console.log(userId, "userId");
+
+      // Check if userId exists in localStorage (not null or undefined)
+      if (userId !== null && userId !== undefined) {
+        dispatch(ProfileUserData(userId));
+      }
+    }
+  }, [dispatch]);
+
+  const {
+    loading: getprofileUserLoading,
+    loginerror: getprofileUserError,
+    getprofile: getUserResponse,
+  } = useSelector((state: any) => state.getprofile);
   return (
     <header className="w-full py-4 bg-white">
       <div className="container mx-auto px-4 flex items-center justify-between">
@@ -38,22 +63,22 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/service-list/category/dj">DJ</Link>
+                  <Link href="/category/live-singer">DJ</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/service-list/category/karaoke">Karaoke</Link>
+                  <Link href="/category/live-singer">Karaoke</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/service-list/category/band">Band</Link>
+                  <Link href="/category/live-singer">Band</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/service-list/category/sufi">Sufi</Link>
+                  <Link href="/category/live-singer">Sufi</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/service-list/category/live-singer">Live Singer</Link>
+                  <Link href="/category/live-singer">Live Singer</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/service-list/category/musician">Musician</Link>
+                  <Link href="/category/live-singer">Musician</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -75,7 +100,11 @@ const Navbar = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>All Locations</DropdownMenuItem>
+                <DropdownMenuItem>North Bangalore</DropdownMenuItem>
+                <DropdownMenuItem>South Bangalore</DropdownMenuItem>
+                <DropdownMenuItem>East Bangalore</DropdownMenuItem>
+                <DropdownMenuItem>West Bangalore</DropdownMenuItem>
+
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
@@ -90,15 +119,26 @@ const Navbar = () => {
               className="rounded-md border-gray-300"
             />
           </div>
-
-          <div className="flex items-center space-x-2">
+           {getUserResponse && getUserResponse?.User ? <div>
+            <Link href="/profile" className="flex items-center space-x-2">
+              <Image
+                src={`https://giggili.com/assets/uploads/media-uploader/ruan-richard-rodrigues-pns2rubybng-unsplash-11732845880.jpg`}
+                alt="Profile"
+                width={40}
+                height={40}
+                className="rounded-full"
+              />
+              <span className="text-sm font-medium">{getUserResponse?.User.artist_name}</span>
+            </Link>
+           </div> :  <div className="flex items-center space-x-2">
             <Button variant="outline" asChild className="font-medium">
               <Link href="/register">Sign Up</Link>
             </Button>
             <Button asChild className="bg-primary hover:bg-primary/90 text-white font-medium">
               <Link href="/login">Sign In</Link>
             </Button>
-          </div>
+          </div>}
+         
         </div>
 
         {/* Mobile Menu Button - for smaller screens */}

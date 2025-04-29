@@ -10,9 +10,9 @@ export default{
     // baseUrl:"http://192.168.248.90:5000/"
     //baseUrl: "http://ec2-13-48-245-166.eu-north-1.compute.amazonaws.com:5000/", //=>aws test mode prod
 //    baseUrl:"https://dev.birlaadvaya.xyz/" //=> prod 
-  // baseUrl:"https://job.birlaadvaya.xyz/"
+  baseUrl:"https://apis.giggili.in/"
   // baseUrl:"https://apisjobs.ourapi.co.in/",   
-  baseUrl: "https://apis.giggili.in/",
+  // baseUrl: "http://192.168.88.31:4000/",
 
  
 
