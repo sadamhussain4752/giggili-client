@@ -29,7 +29,7 @@ const RegionalArtists = () => {
   return (
     <section className="py-8 bg-background">
       <div className="container mx-auto px-4 space-y-12">
-      {Array.isArray(productlist) && productlist.map((region) => (
+      {Array.isArray(productlist) && productlist.map((region,index) => (
           <div key={region.id} className="space-y-6">
             <h2 className="text-xl font-bold">{region.service_area}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
@@ -38,7 +38,7 @@ const RegionalArtists = () => {
               ))}
             </div>
 
-            <CenteredBanner src={require("../../asset/banner2.png")} />
+            <CenteredBanner src={require(`../../asset/banner${index+1}.png`)} />
           </div>
         ))}
       </div>

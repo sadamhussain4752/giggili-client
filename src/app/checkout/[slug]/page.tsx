@@ -185,7 +185,7 @@ const CheckoutPage = ({ params }: Props) => {
               </label>
               <select className="w-full border px-4 py-2 rounded-md">
                 <option value="">Select City</option>
-                <option value="bangalore" selected>
+                <option value="bangalore" defaultValue>
                   Bangalore
                 </option>
               </select>
