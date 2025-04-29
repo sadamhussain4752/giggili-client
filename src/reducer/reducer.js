@@ -66,7 +66,10 @@ import {
   FETCH_COMPANY_FILTER,
   VERIFY_OTP_IB_BY_SUCCESS,
   VERIFY_OTP_IB_BY_REQUEST,
-  VERIFY_OTP_IB_BY_FAILURE
+  VERIFY_OTP_IB_BY_FAILURE,
+  VERIFY_OTP_IB_BY_REQUESTS,
+  VERIFY_OTP_IB_BY_SUCCESSS,
+  VERIFY_OTP_IB_BY_FAILURES
 } from "./actions";
 
 const initialState = {
@@ -484,6 +487,27 @@ const dataReducer = (state = initialState, action) => {
           loadinglist: false,
 
         };
+
+        case VERIFY_OTP_IB_BY_REQUESTS:
+          return {
+            ...state,
+            loading: true,
+            otpVerificationResponse: true,
+  
+          };
+        case VERIFY_OTP_IB_BY_SUCCESSS:
+          return {
+            ...state,
+            otpVerificationResponse: action.payload,
+            loadinglist: false,
+          };
+        case VERIFY_OTP_IB_BY_FAILURES:
+          return {
+            ...state,
+            otpVerificationResponse: action.payload,
+            loadinglist: false,
+  
+          };
     case FETCH_COMPANY_BY_ID_REQUEST:
       return {
         ...state,

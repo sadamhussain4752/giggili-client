@@ -28,6 +28,7 @@ const rootReducer = combineReducers({
   getcompanyById: dataReducer,
   jobslistfilter: dataReducer,
   servicelist: dataReducer,
+// getotpres: dataReducer,
 });
 
 export default rootReducer;

@@ -90,6 +90,11 @@ export const FETCH_COMPANY_BY_ID_REQUEST = 'FETCH_COMPANY_BY_ID_REQUEST';
 export const FETCH_COMPANY_BY_ID_SUCCESS = 'FETCH_COMPANY_BY_ID_SUCCESS';
 export const FETCH_COMPANY_BY_ID_FAILURE = 'FETCH_COMPANY_BY_ID_FAILURE';
 
+
+export const VERIFY_OTP_IB_BY_REQUESTS = 'VERIFY_OTP_IB_BY_REQUESTS';
+export const VERIFY_OTP_IB_BY_SUCCESSS = 'VERIFY_OTP_IB_BY_SUCCESSS';
+export const VERIFY_OTP_IB_BY_FAILURES = 'VERIFY_OTP_IB_BY_FAILURES';
+
 export const FETCH_COMPANY_FILTER = "FETCH_COMPANY_FILTER"
 
 export const fetchHeaderRequest = () => ({
@@ -421,6 +426,20 @@ export const VerifyOTPSuccess = (data) => ({
 
 export const VerifyOTPFailure = (error) => ({
   type: VERIFY_OTP_IB_BY_FAILURE,
+  payload: error,
+});
+
+export const VerifyOTPRequests = () => ({
+  type: VERIFY_OTP_IB_BY_REQUESTS,
+});
+
+export const VerifyOTPSuccesss = (data) => ({
+  type: VERIFY_OTP_IB_BY_SUCCESSS,
+  payload: data,
+});
+
+export const VerifyOTPFailures = (error) => ({
+  type: VERIFY_OTP_IB_BY_FAILURES,
   payload: error,
 });
 

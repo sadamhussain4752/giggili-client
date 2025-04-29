@@ -33,12 +33,12 @@ const RegionalArtists = () => {
           <div key={region.id} className="space-y-6">
             <h2 className="text-xl font-bold">{region.service_area}</h2>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {region.tasks.slice(0, 4).map((artist) => (
+              {region.tasks.slice(0, 4).map((artist: any) => (
                 <ArtistCard key={artist.id} artist={artist} />
               ))}
             </div>
 
-            <CenteredBanner src={require(`../../asset/banner${index+1}.png`)} />
+            <CenteredBanner src={require(`../../asset/banners${index+1}.png`)} />
           </div>
         ))}
       </div>
@@ -46,7 +46,7 @@ const RegionalArtists = () => {
   );
 };
 
-const ArtistCard = ({ artist }: { artist: Artist }) => {
+const ArtistCard = ({ artist }: { artist: any }) => {
   return (
     <Link href={`/service-list/${artist._id}`}>
       <Card className="overflow-hidden hover:shadow-md transition-shadow h-full">

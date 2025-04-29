@@ -73,7 +73,10 @@ import {
   fetchCompanySuccess,
   fetchCompanyFailure,
   fetchCompanyRequest,
-  searchJobslists
+  searchJobslists,
+  VerifyOTPRequests,
+  VerifyOTPSuccesss,
+  VerifyOTPFailures
 } from './actions';
 import constant from '../Constant/constant';
 
@@ -103,6 +106,7 @@ const AddWishAPI = `${constant.baseUrl}api/wishlist/createWishlistItem`;
 const GetWishAPI = `${constant.baseUrl}api/wishlist/wishlistUser`;
 const DeleteWishAPI = `${constant.baseUrl}api/wishlist/deleteWishlistItem`;
 const VerifyOTPURL = `${constant.baseUrl}api/task/service`;
+const VerifyOTPURLs = `${constant.baseUrl}api/user/verify-otp`;
 const GetgetCartItemProductcard = `${constant.baseUrl}api/addcart/getCartItem`;
 const CompanyAPI = `${constant.baseUrl}api/company/getCompany`; //<== admin login
 
@@ -223,6 +227,19 @@ export const VerifyOTP = (body,userId) => async (dispatch) => {
   } catch (error) {
     console.log(error);
     dispatch(VerifyOTPFailure(error.response.data.message));
+  }
+};
+
+export const VerifyOTPCheck = (body,userId) => async (dispatch) => {
+  dispatch(VerifyOTPRequests());
+
+  try {
+    // Send the POST request with the provided body data
+    const response = await axios.post(`${VerifyOTPURLs}`,body);
+    dispatch(VerifyOTPSuccesss(response.data));
+  } catch (error) {
+    console.log(error);
+    dispatch(VerifyOTPFailures(error.response.data));
   }
 };
 export const OrderUserList = (body) => async (dispatch) => {

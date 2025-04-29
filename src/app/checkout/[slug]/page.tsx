@@ -6,7 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { VerifyOTP } from "@/reducer/thunks";
+import { VerifyOTP ,AddOrderProductById} from "@/reducer/thunks";
+import { useRouter } from "next/navigation";
 
 declare global {
   interface Window {
@@ -31,6 +32,12 @@ type Props = {
 };
 
 const CheckoutPage = ({ params }: Props) => {
+  const router = useRouter();
+  const [country, setCountry] = useState('India');
+  const [city, setCity] = useState('Bangalore');
+  const [area, setArea] = useState('');
+    const [coupon, setCoupon] = useState('');
+  
   const { slug } = use(params);
   const dispatch = useDispatch<any>();
   // inside your CheckoutPage component
@@ -114,10 +121,46 @@ const CheckoutPage = ({ params }: Props) => {
         description: `Booking Payment for ${artist?.title || "Artist"}`,
         image: "/logo.png",
         handler: function (response: any) {
-          alert(
-            `Payment Successful! Payment ID: ${response.razorpay_payment_id}`
-          );
+          // alert(
+          //   `Payment Successful! Payment ID: ${response.razorpay_payment_id}`
+          // );
+          const bookingData = {
+            id: '0',
+            invoice: '',
+            service_id: artist?.id ,
+            seller_id: artist?.seller_id,
+            buyer_id: getUserResponse.User.id,
+            name: getUserResponse.User.artist_name,
+            email: getUserResponse.User.email,
+            phone: getUserResponse.User.phone,
+            post_code: getUserResponse.User.post_code,
+            address: getUserResponse.User.address,
+            city: city,
+            area: area,
+            country: country,
+            date: new Date().toDateString(),
+            schedule: '10:00Am - 02:00PM',
+            package_fee: artist?.price,
+            extra_service: '0',
+            sub_total: subtotal.toFixed(0),
+            tax: tax.toFixed(0),
+            total: total.toFixed(0),
+            coupon_code: coupon,
+            coupon_type: '',
+            coupon_amount: '0',
+            commission_type: 'percentage',
+            commission_charge: '10',
+            commission_amount: '400',
+            payment_gateway: 'razorpay',
+            payment_status: 'paid',
+            status: '1',
+            is_order_online: '1',
+            transaction_id: response.razorpay_payment_id,
+            created_at: new Date().toISOString(),
+          };
           // Optionally: call your backend to verify the payment
+
+          dispatch(AddOrderProductById(bookingData));
         },
         prefill: {
           name: data.name,
@@ -159,52 +202,36 @@ const CheckoutPage = ({ params }: Props) => {
         {/* Left Side - Form */}
         <form onSubmit={handleSubmit(handlePayment)} className="space-y-6">
           {/* Dropdowns */}
-          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            {/* Event Country */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Event Country
-              </label>
-              <select
-                className="w-full border px-4 py-2 rounded-md"
-                {...register("bookingCategory", {
-                  required: "Booking category is required",
-                })}
-              >
-                <option value="">Select Country</option>
-                <option value="india" selected>
-                  India
-                </option>
-              </select>
-            </div>
-
-            {/* Event City */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Event City
-              </label>
-              <select className="w-full border px-4 py-2 rounded-md">
-                <option value="">Select City</option>
-                <option value="bangalore" defaultValue>
-                  Bangalore
-                </option>
-              </select>
-            </div>
-
-            {/* Event Area */}
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Event Area
-              </label>
-              <select className="w-full border px-4 py-2 rounded-md">
-                <option value="">Select Area</option>
-                <option value="north-bangalore">North Bangalore</option>
-                <option value="south-bangalore">South Bangalore</option>
-                <option value="east-bangalore">East Bangalore</option>
-                <option value="west-bangalore">West Bangalore</option>
-              </select>
-            </div>
-          </div>
+          <div className="space-y-6">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Event Country</label>
+                      <Input value={country} onChange={(e) => setCountry(e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Event City</label>
+                      <Input value={city} onChange={(e) => setCity(e.target.value)} />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium mb-1">Event Area</label>
+                      <select
+                        className="w-full border px-4 py-2 rounded-md"
+                        value={area}
+                        onChange={(e) => setArea(e.target.value)}
+                      >
+                        <option value="">Select Area</option>
+                        <option value="north-bangalore">North Bangalore</option>
+                        <option value="south-bangalore">South Bangalore</option>
+                        <option value="east-bangalore">East Bangalore</option>
+                        <option value="west-bangalore">West Bangalore</option>
+                      </select>
+                    </div>
+                  </div>
+        
+                  <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
+                    Sign In
+                  </Button>
+                </div>
 
           {/* Inputs */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -330,6 +357,11 @@ const CheckoutPage = ({ params }: Props) => {
             <Button
               type="button"
               className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+              onClick={() => {
+                alert("Please login to proceed with the booking.");
+                router.push("/login"); // Navigate to /login
+
+              }}
             >
               Sign In
             </Button>
