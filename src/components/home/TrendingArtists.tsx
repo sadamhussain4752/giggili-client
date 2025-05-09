@@ -111,7 +111,7 @@ const ArtistCard = ({ artist }: { artist: typeof TRENDING_ARTISTS[number] }) => 
         </div>
       </div>
       <CardContent className="p-4">
-        <h3 className="font-bold text-lg text-foreground mb-1">{artist.name}</h3>
+        <h3 className="font-bold text-lg text-foreground mb-1">{artist.title}</h3>
         <p className="text-sm text-muted-foreground mb-2">
           {artist?.Categories_Name?.slice(0, 2).join(', ') || 'No categories'}
           {artist?.Categories_Name?.length > 2 && '...'}

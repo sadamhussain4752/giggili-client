@@ -227,10 +227,14 @@ const CheckoutPage = ({ params }: Props) => {
                       </select>
                     </div>
                   </div>
-        
-                  <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
+                  {getUserResponse.User.name  ? <div className="text-sm text-gray-500 mt-2">
+                      You are logged in as {getUserResponse.User.name}
+                    </div> : (
+                     <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
                     Sign In
                   </Button>
+                  )}
+                
                 </div>
 
           {/* Inputs */}

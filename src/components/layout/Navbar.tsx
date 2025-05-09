@@ -19,6 +19,8 @@ const Navbar = () => {
   const [showMenu, setShowMenu] = useState<any>(false);
   const [locationName, setLocationName] = useState("Detecting...");
   const [formattedAddress, setFormattedAddress] = useState("");
+  const [location, setlocation] = useState("");
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     // Check if we're running on the client-side
@@ -72,7 +74,7 @@ const Navbar = () => {
     getprofile: getUserResponse,
   } = useSelector((state: any) => state.getprofile);
   return (
-    <header className="w-full py-4 bg-white">
+    <header className="w-full py-4 bg-white shadow-sm relative">
       <div className="container mx-auto px-4 flex items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center">
@@ -100,22 +102,22 @@ const Navbar = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent align="start" className="w-48">
                 <DropdownMenuItem asChild>
-                  <Link href="/category/live-singer">DJ</Link>
+                  <Link href="/category/28">DJ</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/category/live-singer">Karaoke</Link>
+                  <Link href="/category/29">Karaoke</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/category/live-singer">Band</Link>
+                  <Link href="/category/30">Band</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/category/live-singer">Sufi</Link>
+                  <Link href="/category/31">Sufi</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/category/live-singer">Live Singer</Link>
+                  <Link href="/category/32">Live Singer</Link>
                 </DropdownMenuItem>
                 <DropdownMenuItem asChild>
-                  <Link href="/category/live-singer">Musician</Link>
+                  <Link href="/category/33">Musician</Link>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -161,30 +163,55 @@ const Navbar = () => {
                       d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                     />
                   </svg>
-                  <span>View All</span>
+                  <span>{location === "" ? "View All" : location} </span>
                   <ChevronDown className="h-4 w-4" />
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem>North Bangalore</DropdownMenuItem>
-                <DropdownMenuItem>South Bangalore</DropdownMenuItem>
-                <DropdownMenuItem>East Bangalore</DropdownMenuItem>
-                <DropdownMenuItem>West Bangalore</DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setlocation("North Bangalore");
+                  }}
+                >
+                  {" "}
+                  North Bangalore
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setlocation("South Bangalore");
+                  }}
+                >
+                  South Bangalore
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setlocation("East Bangalore");
+                  }}
+                >
+                  East Bangalore
+                </DropdownMenuItem>
+                <DropdownMenuItem
+                  onClick={() => {
+                    setlocation("West Bangalore");
+                  }}
+                >
+                  West Bangalore
+                </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
         </nav>
         <div className="hidden md:flex flex-col items-start text-sm text-muted-foreground">
-  <div className="flex items-center space-x-1">
-    <MapPin className="w-4 h-4 text-primary" />
-    <span>{locationName}</span>
-  </div>
-  {formattedAddress && (
-    <span className="text-xs text-gray-500 truncate max-w-[200px]">
-      {formattedAddress}
-    </span>
-  )}
-</div>
+          <div className="flex items-center space-x-1">
+            <MapPin className="w-4 h-4 text-primary" />
+            <span>{locationName}</span>
+          </div>
+          {formattedAddress && (
+            <span className="text-xs text-gray-500 truncate max-w-[200px]">
+              {formattedAddress}
+            </span>
+          )}
+        </div>
 
         {/* Search & Actions */}
         <div className="flex items-center space-x-3">
@@ -202,7 +229,7 @@ const Navbar = () => {
                 onMouseEnter={() => setShowMenu(true)}
                 onMouseLeave={() => setShowMenu(false)}
               >
-                <Link href="/profile" className="flex items-center space-x-2">
+                <Link href="#" className="flex items-center space-x-2">
                   <Image
                     src={`https://giggili.com/assets/uploads/media-uploader/ruan-richard-rodrigues-pns2rubybng-unsplash-11732845880.jpg`}
                     alt="Profile"
@@ -211,12 +238,23 @@ const Navbar = () => {
                     className="rounded-full"
                   />
                   <span className="text-sm font-medium">
-                    {getUserResponse?.User.artist_name}
+                    {getUserResponse?.User.name}
                   </span>
                 </Link>
 
                 {showMenu && (
                   <div className="absolute top-30 right-0 bg-white shadow-md rounded-md p-2 z-50">
+                    <Link
+                      href="/profile"
+                      className="flex items-center space-x-2"
+                    >
+                      <button
+                        onClick={() => {}}
+                        className="block w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-gray-100"
+                      >
+                        Profile
+                      </button>
+                    </Link>
                     <button
                       onClick={() => {
                         localStorage.removeItem("tokenId");
@@ -246,7 +284,11 @@ const Navbar = () => {
         </div>
 
         {/* Mobile Menu Button - for smaller screens */}
-        <Button variant="ghost" className="md:hidden p-2">
+        <Button
+          variant="ghost"
+          className="md:hidden p-2"
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -258,10 +300,115 @@ const Navbar = () => {
               strokeLinecap="round"
               strokeLinejoin="round"
               strokeWidth={2}
-              d="M4 6h16M4 12h16M4 18h16"
+              d={
+                mobileMenuOpen
+                  ? "M6 18L18 6M6 6l12 12"
+                  : "M4 6h16M4 12h16M4 18h16"
+              }
             />
           </svg>
         </Button>
+
+        {mobileMenuOpen && (
+  <div className="absolute top-full left-0 w-full bg-white z-50 shadow-md px-4 py-4 space-y-4 md:hidden">
+    <div className="relative group">
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant="ghost"
+            className="flex items-center space-x-1 font-medium"
+            onClick={() => setMobileMenuOpen(false)} // Close menu when the dropdown is clicked
+          >
+            <span>Service List</span>
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-48">
+          <DropdownMenuItem asChild>
+            <Link href="/category/28" onClick={() => setMobileMenuOpen(false)}>DJ</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/category/29" onClick={() => setMobileMenuOpen(false)}>Karaoke</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/category/30" onClick={() => setMobileMenuOpen(false)}>Band</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/category/31" onClick={() => setMobileMenuOpen(false)}>Sufi</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/category/32" onClick={() => setMobileMenuOpen(false)}>Live Singer</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem asChild>
+            <Link href="/category/33" onClick={() => setMobileMenuOpen(false)}>Musician</Link>
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+    <Link href="/about" className="block font-medium" onClick={() => setMobileMenuOpen(false)}>
+      About
+    </Link>
+    <Link href="/contact" className="block font-medium" onClick={() => setMobileMenuOpen(false)}>
+      Contact
+    </Link>
+    <div className="border-t pt-4">
+      <label
+        htmlFor="location"
+        className="block text-sm font-medium mb-2 text-gray-700"
+      >
+        Select Location
+      </label>
+      <select
+        id="location"
+        className="block w-50 border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-primary"
+        value={location}
+        onChange={(e) => {
+          setlocation(e.target.value);
+          setMobileMenuOpen(false);
+        }}
+      >
+        <option value="">location-</option>
+        <option value="North Bangalore">North Bangalore</option>
+        <option value="South Bangalore">South Bangalore</option>
+        <option value="East Bangalore">East Bangalore</option>
+        <option value="West Bangalore">West Bangalore</option>
+      </select>
+    </div>
+
+    <div className="pt-4 border-t">
+      {getUserResponse?.User ? (
+        <>
+          <p className="text-sm font-medium mb-2">
+            {getUserResponse.User.name}
+          </p>
+          <Link href="/profile" className="block text-sm text-blue-600" onClick={() => setMobileMenuOpen(false)}>
+            Profile
+          </Link>
+          <button
+            onClick={() => {
+              localStorage.removeItem("tokenId");
+              window.location.reload();
+              setMobileMenuOpen(false); // Close the menu after logging out
+            }}
+            className="block text-sm text-red-600 mt-2"
+          >
+            Logout
+          </button>
+        </>
+      ) : (
+        <div className="flex space-x-2">
+          <Button variant="outline" asChild>
+            <Link href="/register" onClick={() => setMobileMenuOpen(false)}>Sign Up</Link>
+          </Button>
+          <Button className="bg-primary text-white" asChild>
+            <Link href="/login" onClick={() => setMobileMenuOpen(false)}>Sign In</Link>
+          </Button>
+        </div>
+      )}
+    </div>
+  </div>
+)}
+
       </div>
     </header>
   );

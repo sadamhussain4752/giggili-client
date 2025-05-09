@@ -1,5 +1,6 @@
 'use client';
 
+import { use } from 'react';
 import { useEffect, useMemo, useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -8,9 +9,19 @@ import { Button } from '@/components/ui/button';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchStoreData } from '@/reducer/thunks';
 
-export default function ServiceListPage() {
+type Props = {
+  params: Promise<{
+    slug: string;
+  }>;
+};
+
+export default function ServiceListPage({ params }: Props) {
+  const { slug } = use(params); // Unwrapping Promise from App Router
+  console.log(slug, "slug");
+
   const dispatch = useDispatch<any>();
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
   const itemsPerPage = 8;
 
   useEffect(() => {
@@ -19,28 +30,19 @@ export default function ServiceListPage() {
 
   const { storelist, loading, error } = useSelector((state: any) => state.storelist);
 
-  const GENRES = useMemo(
-    () => [
-      'Bollywood and Punjabi',
-      'House and Techno',
-      'English commercial',
-      'Hip Hop & RnB',
-      'Techno',
-      'Afro House',
-      'Retro',
-      'Melodic House',
-    ],
-    []
-  );
+  const filteredData = useMemo(() => {
+    if (!slug) return storelist; // No filter if slug is empty
+    return storelist?.filter((artist: any) => artist?.category_id === slug) || [];
+  }, [storelist, slug]);
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
-    return storelist?.slice(startIndex, startIndex + itemsPerPage) || [];
-  }, [storelist, currentPage]);
+    return filteredData?.slice(startIndex, startIndex + itemsPerPage);
+  }, [filteredData, currentPage]);
 
   const totalPages = useMemo(() => {
-    return Math.ceil((storelist?.length || 0) / itemsPerPage);
-  }, [storelist]);
+    return Math.ceil(filteredData?.length / itemsPerPage);
+  }, [filteredData]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -79,8 +81,18 @@ export default function ServiceListPage() {
               stroke="currentColor"
               className="w-3 h-3"
             >
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17.657 16.657L13.414 20.9a2 2 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
+              />
             </svg>
             {artist.location || 'Bangalore, India'}
           </p>
@@ -92,35 +104,6 @@ export default function ServiceListPage() {
   return (
     <div className="bg-background py-8">
       <div className="container mx-auto px-4">
-        {/* Hero Section */}
-        <div className="relative bg-gradient-to-r from-background to-gray-100 rounded-xl mb-12 overflow-hidden">
-          <div className="p-8 md:p-12 md:w-2/3">
-            <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
-              Discover DJs That Move the Crowd
-            </h1>
-            <Button className="bg-primary hover:bg-primary/90 mt-4">Find an Artist</Button>
-          </div>
-          <div className="absolute right-0 top-0 h-full w-1/3 hidden md:block">
-            <Image
-              src="https://ext.same-assets.com/1808818058/2213424676.jpeg"
-              alt="DJ Crowd"
-              fill
-              className="object-cover"
-            />
-          </div>
-        </div>
-
-        {/* Filters Section */}
-        <div className="mb-8 flex flex-wrap gap-3">
-          {GENRES.map((genre) => (
-            <Button key={genre} variant="outline" className="text-sm">
-              {genre}
-            </Button>
-          ))}
-          <Button variant="outline" className="text-sm">Express Booking</Button>
-          <Button variant="outline" className="text-sm">VIP</Button>
-        </div>
-
         {/* Content Section */}
         {loading ? (
           <p className="text-center">Loading artists...</p>

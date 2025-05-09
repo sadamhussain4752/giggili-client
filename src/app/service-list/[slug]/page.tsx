@@ -105,6 +105,8 @@ export default function ArtistDetailPage({ params }: Props) {
           </div>
 
           <div className="mt-4 md:mt-0 flex items-center gap-2">
+            
+          <Link href={`/service-list/artist/${artist?._id}`} >
             <Button variant="outline" className="flex items-center gap-2">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -122,9 +124,10 @@ export default function ArtistDetailPage({ params }: Props) {
               </svg>
               Know your artist
             </Button>
+            </Link>
             <p className="text-lg font-semibold">
-              <span className="text-sm font-normal">From: </span>
-              {artist?.price || '₹0.00'}
+              {/* <span className="text-sm font-normal">From: </span> */}
+              {/* {artist?.price || '₹0.00'} */}
             </p>
           </div>
         </div>

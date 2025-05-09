@@ -1,9 +1,10 @@
-import React from 'react';
-import Image from 'next/image';
-import Link from 'next/link';
-import { Card, CardContent } from '@/components/ui/card';
-import CenteredBanner from './CenteredBanner'; // adjust path as needed
+import React from "react";
+import Image from "next/image";
+import Link from "next/link";
+import { Card, CardContent } from "@/components/ui/card";
+import CenteredBanner from "./CenteredBanner"; // adjust path as needed
 import { useDispatch, useSelector } from "react-redux";
+import { ChevronRight } from "lucide-react";
 
 // Define artist type
 type Artist = {
@@ -17,30 +18,39 @@ type Artist = {
 
 // Artist data by region
 
-
 const RegionalArtists = () => {
-
   const {
     productlist,
     loading: productListLoading,
     error: productListError,
   } = useSelector((state: any) => state.productlist);
- console.log("productlist", productlist);
+  console.log("productlist", productlist);
   return (
     <section className="py-8 bg-background">
       <div className="container mx-auto px-4 space-y-12">
-      {Array.isArray(productlist) && productlist.map((region,index) => (
-          <div key={region.id} className="space-y-6">
-            <h2 className="text-xl font-bold">{region.service_area}</h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {region.tasks.slice(0, 4).map((artist: any) => (
-                <ArtistCard key={artist.id} artist={artist} />
-              ))}
-            </div>
+        {Array.isArray(productlist) &&
+          productlist.map((region, index) => (
+            <div key={region.id} className="space-y-6">
+              <div className="flex justify-between items-center mb-8">
+                <h2 className="text-xl font-bold">{region.service_area}</h2>
+                <Link
+                  href="/service-list"
+                  className="text-sm text-primary flex items-center gap-1 hover:underline"
+                >
+                  View All <ChevronRight className="w-4 h-4" />
+                </Link>
+              </div>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                {region.tasks.slice(0, 4).map((artist: any) => (
+                  <ArtistCard key={artist.id} artist={artist} />
+                ))}
+              </div>
 
-            <CenteredBanner src={require(`../../asset/banners${index+1}.png`)} />
-          </div>
-        ))}
+              <CenteredBanner
+                src={require(`../../asset/banners${index + 1}.png`)}
+              />
+            </div>
+          ))}
       </div>
     </section>
   );
@@ -57,16 +67,19 @@ const ArtistCard = ({ artist }: { artist: any }) => {
             fill
             className="object-cover"
             loading="lazy" // <-- this is optional in Next.js (defaults to lazy)
-            
           />
           <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
-          ₹{" "}{artist.price}
+            ₹ {artist.price}
           </div>
         </div>
         <CardContent className="p-4">
           <h3 className="font-semibold text-lg text-foreground mb-1">
             {artist.title}
           </h3>
+          <p className="text-sm text-muted-foreground mb-2">
+            {artist?.Categories_Name?.slice(0, 2).join(", ") || "No categories"}
+            {artist?.Categories_Name?.length > 2 && "..."}
+          </p>
           <p className="text-xs flex items-center gap-1 text-muted-foreground">
             <svg
               xmlns="http://www.w3.org/2000/svg"
