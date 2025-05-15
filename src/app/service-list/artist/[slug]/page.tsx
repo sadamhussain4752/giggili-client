@@ -14,6 +14,8 @@ type Package = {
   name: string;
   price: string;
 };
+
+
 const initialReviews = [
   {
     id: 1,
@@ -39,11 +41,13 @@ const initialReviews = [
 ];
 
 type Props = {
-  params: Promise<{ slug: string }>;
+  params: Promise<{
+    slug: string;
+  }>;
 };
-
 export default function ArtistDetailPage({ params }: Props) {
-  const { slug } = use(params);
+  const { slug } = use(params); // Unwrapping Promise from App Router
+
   const dispatch = useDispatch<any>();
 
   useEffect(() => {
@@ -57,40 +61,59 @@ export default function ArtistDetailPage({ params }: Props) {
     loadinglist,
     error,
   } = useSelector((state: any) => state.servicelist);
-
   if (loadinglist) return <div className="text-center py-20">Loading...</div>;
-  if (error)
-    return <div className="text-center py-20 text-red-500">{error}</div>;
 
+  if(!artist){
+    return  <div className="text-center py-20">Loading...</div>
+  }
   return (
     <div className="bg-background">
       {/* Cover Image Section */}
-      <div className="relative h-[100px] md:h-[100px]">
-        {artist?.seller_image && (
-          <Image
-            src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
-            alt="Cover"
-            fill
-            className="object-cover"
-            priority
-          />
-        )}
+      {/* Banner at the top */}
 
-        {/* Profile Image */}
-        <div className="absolute -bottom-16 left-8 md:left-16 w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white bg-white">
-          {artist?.seller_image && (
-            <Image
-              src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
-              alt="Profile"
-              fill
-              className="object-cover"
-            />
-          )}
+
+      {/* Two-column layout */}
+      <div className="container mx-auto px-4 pt-20 pb-12">
+        <div className="flex flex-col md:flex-row gap-8">
+          {/* Left: Banner */}
+         <div className="w-full md:w-8/12 mb-2 md:mb-0 h-[380px]">
+  <Image
+    src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
+    alt="Event Banner"
+    width={1200}
+    height={300}
+    className="rounded-lg object-cover w-full h-full"
+  />
+</div>
+
+
+
+
+          {/* Right: Booking Card */}
+          <div className="w-full md:w-4/12">
+            <Card className="border border-muted shadow-lg">
+              <CardContent className="p-6">
+                <p className="text-muted-foreground mb-2">Sat 24 May 2025</p>
+                <p className="font-semibold text-lg mb-2">7:30 PM • 1h 15m</p>
+                <p className="mb-2">Age: 14yrs+</p>
+                <p className="mb-2">Languages: English, Hindi</p>
+                <p className="mb-2">Genre: DJ</p>
+                <p className="mb-4">
+                  Location: Fan Park, Phoenix Mall of Asia, Bengaluru
+                </p>
+                <div className="font-bold text-xl mb-2">₹799 onwards</div>
+                <Button className="w-full bg-primary text-white">Book Now</Button>
+                <p className="text-xs text-orange-500 mt-2">Filling Fast</p>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
 
+
+
       {/* Main Content */}
-      <div className="container mx-auto px-4 pt-20 pb-12">
+      <div className="container mx-auto px-4  pb-12">
         {/* Basic Info Section */}
         <div className="flex flex-col md:flex-row justify-between items-start mb-12">
           <div>
@@ -139,7 +162,7 @@ export default function ArtistDetailPage({ params }: Props) {
 
           {/* Booking Info */}
           <div className="mt-4 md:mt-0 flex items-center gap-4">
-           
+
             <div className="text-lg font-semibold">
               {/* <span className="text-sm font-normal">From: </span> */}
               {/* {artist?.price || "₹0.00"} */}
@@ -230,9 +253,8 @@ export default function ArtistDetailPage({ params }: Props) {
           <h2 className="text-2xl font-bold mb-4">Featured Artist</h2>
           <div className="flex flex-col items-start gap-2">
             <Image
-              src={`https://giggili.com/assets/uploads/media-uploader/${
-                artist?.seller_image || "placeholder.jpg"
-              }`}
+              src={`https://giggili.com/assets/uploads/media-uploader/${artist?.seller_image || "placeholder.jpg"
+                }`}
               alt="Artist"
               width={200}
               height={200}
@@ -291,7 +313,7 @@ export default function ArtistDetailPage({ params }: Props) {
         <section className="mb-10">
           <h2 className="text-2xl font-bold mb-4">You May Also Like</h2>
           <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-4">
-            {[1, 2, 3 ,4].map((item) => (
+            {[1, 2, 3, 4].map((item) => (
               <Card key={item}>
                 <CardContent className="p-4">
                   <Image

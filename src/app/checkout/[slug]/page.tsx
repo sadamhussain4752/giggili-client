@@ -227,8 +227,8 @@ const CheckoutPage = ({ params }: Props) => {
                       </select>
                     </div>
                   </div>
-                  {getUserResponse.User.name  ? <div className="text-sm text-gray-500 mt-2">
-                      You are logged in as {getUserResponse.User.name}
+                  {getUserResponse?.User?.name  ? <div className="text-sm text-gray-500 mt-2">
+                      You are logged in as {getUserResponse?.User?.name}
                     </div> : (
                      <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
                     Sign In
@@ -238,7 +238,9 @@ const CheckoutPage = ({ params }: Props) => {
                 </div>
 
           {/* Inputs */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+
+          {getUserResponse?.User?.name  && <>
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-sm font-medium mb-1">
                 Your Name *
@@ -369,7 +371,8 @@ const CheckoutPage = ({ params }: Props) => {
             >
               Sign In
             </Button>
-          )}
+          )}</>}
+      
         </form>
 
         {/* Right Side - Booking Summary */}

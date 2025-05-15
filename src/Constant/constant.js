@@ -12,7 +12,7 @@ export default{
 //    baseUrl:"https://dev.birlaadvaya.xyz/" //=> prod 
   baseUrl:"https://apis.giggili.in/"
   // baseUrl:"https://apisjobs.ourapi.co.in/",   
-  // baseUrl: "http://192.168.88.31:4000/",
+  // baseUrl: "http://192.168.31.49:4000/",
 
  
 
