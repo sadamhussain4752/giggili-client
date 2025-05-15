@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
 
 interface StepField {
@@ -128,17 +128,7 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(0);
   const current = stepFields[step];
 
-  // For animating step content fade & slide
-  const [animate, setAnimate] = useState(false);
-
   const [selectedValues, setSelectedValues] = useState<{ [title: string]: string }>({});
-
-  // Animate content on step change
-  useEffect(() => {
-    setAnimate(true);
-    const timer = setTimeout(() => setAnimate(false), 300);
-    return () => clearTimeout(timer);
-  }, [step]);
 
   const handleOptionSelect = (value: string) => {
     setSelectedValues((prev) => ({
@@ -151,104 +141,89 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
 
   return (
-    <Dialog
-      open={isOpen}
-      onClose={onClose}
-      className="fixed z-50 inset-0 overflow-y-auto"
-      static
-    >
+    <Dialog open={isOpen} onClose={onClose} className="fixed z-50 inset-0 overflow-y-auto">
       <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-30">
-        <Dialog.Panel
-          className={`bg-white p-6 w-full max-w-xl rounded-md shadow-lg
-          transform transition-all duration-300
-          ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
-        >
-          {/* Animate step content */}
-          <div
-            className={`transition-all duration-300 ease-in-out
-            ${animate ? "opacity-0 translate-x-4" : "opacity-100 translate-x-0"}`}
-          >
-            <h2 className="text-xl font-semibold whitespace-pre-line">{current.title}</h2>
+        <Dialog.Panel className="bg-white p-6 w-full max-w-xl rounded-md shadow-lg">
+          <h2 className="text-xl font-semibold whitespace-pre-line">{current.title}</h2>
 
-            {current.description && (
-              <p className="text-gray-500 mt-2 whitespace-pre-line">{current.description}</p>
-            )}
+          {current.description && (
+            <p className="text-gray-500 mt-2 whitespace-pre-line">{current.description}</p>
+          )}
 
-            {current.options && (
-              <div className="mt-4 space-y-2">
-                {current.options.map((opt, idx) => (
-                  <label
-                    key={idx}
-                    className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
-                  >
-                    <input
-                      type="radio"
-                      name={`step-${step}`}
-                      value={opt}
-                      checked={selectedValues[current.title] === opt}
-                      onChange={() => handleOptionSelect(opt)}
-                    />
-                    <span>{opt}</span>
-                  </label>
-                ))}
-              </div>
-            )}
-
-            {current.inputType === "text" && (
-              <input
-                type="text"
-                placeholder="Enter your postcode or town"
-                className="mt-4 w-full border rounded p-2"
-                maxLength={current.Number}
-                value={selectedValues[current.title] || ""}
-                onChange={(e) =>
-                  setSelectedValues((prev) => ({
-                    ...prev,
-                    [current.title]: e.target.value,
-                  }))
-                }
-              />
-            )}
-
-            {current.inputType === "date" && (
-              <input
-                type="date"
-                className="mt-4 w-full border rounded p-2"
-                value={selectedValues[current.title] || ""}
-                onChange={(e) =>
-                  setSelectedValues((prev) => ({
-                    ...prev,
-                    [current.title]: e.target.value,
-                  }))
-                }
-              />
-            )}
-
-            <div className="mt-6 flex justify-between">
-              {step > 0 && (
-                <button onClick={handleBack} className="text-blue-600 hover:underline">
-                  Back
-                </button>
-              )}
-              {step < stepFields.length - 1 ? (
-                <button
-                  onClick={handleNext}
-                  className="ml-auto bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700"
+          {current.options && (
+            <div className="mt-4 space-y-2">
+              {current.options.map((opt, idx) => (
+                <label
+                  key={idx}
+                  className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
                 >
-                  Continue
-                </button>
-              ) : (
-                <button
-                  onClick={() => {
-                    localStorage.setItem("djFormResponses", JSON.stringify(selectedValues));
-                    onClose();
-                  }}
-                  className="ml-auto bg-green-600 text-white px-4 py-2 rounded font-medium hover:bg-green-700"
-                >
-                  Finish
-                </button>
-              )}
+                  <input
+                    type="radio"
+                    name={`step-${step}`}
+                    value={opt}
+                    checked={selectedValues[current.title] === opt}
+                    onChange={() => handleOptionSelect(opt)}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
             </div>
+          )}
+
+          {current.inputType === "text" && (
+            <input
+              type="text"
+              placeholder="Enter your postcode or town"
+              className="mt-4 w-full border rounded p-2"
+              maxLength={current.Number}
+              value={selectedValues[current.title] || ""}
+              onChange={(e) =>
+                setSelectedValues((prev) => ({
+                  ...prev,
+                  [current.title]: e.target.value,
+                }))
+              }
+            />
+          )}
+
+          {current.inputType === "date" && (
+            <input
+              type="date"
+              className="mt-4 w-full border rounded p-2"
+              value={selectedValues[current.title] || ""}
+              onChange={(e) =>
+                setSelectedValues((prev) => ({
+                  ...prev,
+                  [current.title]: e.target.value,
+                }))
+              }
+            />
+          )}
+
+          <div className="mt-6 flex justify-between">
+            {step > 0 && (
+              <button onClick={handleBack} className="text-blue-600 hover:underline">
+                Back
+              </button>
+            )}
+            {step < stepFields.length - 1 ? (
+              <button
+                onClick={handleNext}
+                className="ml-auto bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700"
+              >
+                Continue
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  localStorage.setItem("djFormResponses", JSON.stringify(selectedValues));
+                  onClose();
+                }}
+                className="ml-auto bg-green-600 text-white px-4 py-2 rounded font-medium hover:bg-green-700"
+              >
+                Finish
+              </button>
+            )}
           </div>
         </Dialog.Panel>
       </div>
