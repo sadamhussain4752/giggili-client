@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { VerifyOTP ,AddOrderProductById} from "@/reducer/thunks";
+import { VerifyOTP, AddOrderProductById } from "@/reducer/thunks";
 import { useRouter } from "next/navigation";
 
 declare global {
@@ -36,8 +36,14 @@ const CheckoutPage = ({ params }: Props) => {
   const [country, setCountry] = useState('India');
   const [city, setCity] = useState('Bangalore');
   const [area, setArea] = useState('');
-    const [coupon, setCoupon] = useState('');
-  
+  const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
+  const entries = Object.entries(storedData);
+
+  const INITIAL_VISIBLE = 4; // number of items to show initially
+  const [showAll, setShowAll] = useState(false);
+
+  const visibleEntries = showAll ? entries : entries.slice(0, INITIAL_VISIBLE); const [coupon, setCoupon] = useState('');
+
   const { slug } = use(params);
   const dispatch = useDispatch<any>();
   // inside your CheckoutPage component
@@ -51,7 +57,7 @@ const CheckoutPage = ({ params }: Props) => {
     reset,
     formState: { errors },
   } = useForm<FormData>();
-  
+
 
   const {
     loading: getprofileUserLoading,
@@ -59,7 +65,7 @@ const CheckoutPage = ({ params }: Props) => {
     getprofile: getUserResponse,
   } = useSelector((state: any) => state.getprofile);
 
-  
+
 
   const {
     servicelist: artist,
@@ -91,7 +97,7 @@ const CheckoutPage = ({ params }: Props) => {
       });
     }
   }, [getUserResponse, reset]);
-  
+
 
   const loadRazorpayScript = () => {
     return new Promise((resolve, reject) => {
@@ -103,10 +109,26 @@ const CheckoutPage = ({ params }: Props) => {
     });
   };
 
+
+  if (loadinglist) return <div className="text-center py-20">Loading...</div>;
+  if (error)
+    return <div className="text-center text-red-500 py-20">{error}</div>;
+  if (!artist)
+    return (
+      <div className="text-center py-20">
+        No service found. Please try again.
+      </div>
+    );
+
+  const sessionPrice = Number(artist?.price) || 0;
+  const additionalServicePrice = 200;
+  const subtotal = sessionPrice + additionalServicePrice;
+  const tax = parseFloat((subtotal * 0.18).toFixed(2));
+  const total = parseFloat((subtotal + tax).toFixed(2));
   const handlePayment = async (data: FormData) => {
     try {
       const res = await loadRazorpayScript();
-      const finalAmount = Math.round((artist?.price || 0) * 1.18 * 100);
+      const finalAmount = Math.round((total || 0) * 100);
 
       if (!finalAmount) {
         alert("Invalid amount. Please try again later.");
@@ -127,7 +149,7 @@ const CheckoutPage = ({ params }: Props) => {
           const bookingData = {
             id: '0',
             invoice: '',
-            service_id: artist?.id ,
+            service_id: artist?.id,
             seller_id: artist?.seller_id,
             buyer_id: getUserResponse.User.id,
             name: getUserResponse.User.artist_name,
@@ -179,23 +201,6 @@ const CheckoutPage = ({ params }: Props) => {
       alert(err.message || "Something went wrong during payment.");
     }
   };
-
-  if (loadinglist) return <div className="text-center py-20">Loading...</div>;
-  if (error)
-    return <div className="text-center text-red-500 py-20">{error}</div>;
-  if (!artist)
-    return (
-      <div className="text-center py-20">
-        No service found. Please try again.
-      </div>
-    );
-
-  const sessionPrice = Number(artist?.price) || 0;
-  const additionalServicePrice = 200;
-  const subtotal = sessionPrice + additionalServicePrice;
-  const tax = parseFloat((subtotal * 0.18).toFixed(2));
-  const total = parseFloat((subtotal + tax).toFixed(2));
-
   return (
     <div className="min-h-screen bg-white py-10 px-6 md:px-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -203,117 +208,116 @@ const CheckoutPage = ({ params }: Props) => {
         <form onSubmit={handleSubmit(handlePayment)} className="space-y-6">
           {/* Dropdowns */}
           <div className="space-y-6">
-                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Event Country</label>
-                      <Input value={country} onChange={(e) => setCountry(e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Event City</label>
-                      <Input value={city} onChange={(e) => setCity(e.target.value)} />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium mb-1">Event Area</label>
-                      <select
-                        className="w-full border px-4 py-2 rounded-md"
-                        value={area}
-                        onChange={(e) => setArea(e.target.value)}
-                      >
-                        <option value="">Select Area</option>
-                        <option value="north-bangalore">North Bangalore</option>
-                        <option value="south-bangalore">South Bangalore</option>
-                        <option value="east-bangalore">East Bangalore</option>
-                        <option value="west-bangalore">West Bangalore</option>
-                      </select>
-                    </div>
-                  </div>
-                  {getUserResponse?.User?.name  ? <div className="text-sm text-gray-500 mt-2">
-                      You are logged in as {getUserResponse?.User?.name}
-                    </div> : (
-                     <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
-                    Sign In
-                  </Button>
-                  )}
-                
-                </div>
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">Event Country</label>
+                <Input value={country} onChange={(e) => setCountry(e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Event City</label>
+                <Input value={city} onChange={(e) => setCity(e.target.value)} />
+              </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Event Area</label>
+                <select
+                  className="w-full border px-4 py-2 rounded-md"
+                  value={area}
+                  onChange={(e) => setArea(e.target.value)}
+                >
+                  <option value="">Select Area</option>
+                  <option value="north-bangalore">North Bangalore</option>
+                  <option value="south-bangalore">South Bangalore</option>
+                  <option value="east-bangalore">East Bangalore</option>
+                  <option value="west-bangalore">West Bangalore</option>
+                </select>
+              </div>
+            </div>
+            {getUserResponse?.User?.name ? <div className="text-sm text-gray-500 mt-2">
+              You are logged in as {getUserResponse?.User?.name}
+            </div> : (
+              <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
+                Sign In
+              </Button>
+            )}
+
+          </div>
 
           {/* Inputs */}
 
-          {getUserResponse?.User?.name  && <>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Your Name *
-              </label>
-              <Input
-                placeholder="Enter your name"
-                {...register("name", { required: "Name is required" })}
-              />
-              {errors.name && (
-                <p className="text-red-500 text-xs">{errors.name.message}</p>
-              )}
-            </div>
+          {getUserResponse?.User?.name && <>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Your Name *
+                </label>
+                <Input
+                  placeholder="Enter your name"
+                  {...register("name", { required: "Name is required" })}
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-xs">{errors.name.message}</p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Your Email *
-              </label>
-              <Input
-                type="email"
-                placeholder="Enter your email"
-                {...register("email", {
-                  required: "Email is required",
-                  pattern: {
-                    value: /^\S+@\S+$/i,
-                    message: "Invalid email address",
-                  },
-                })}
-              />
-              {errors.email && (
-                <p className="text-red-500 text-xs">{errors.email.message}</p>
-              )}
-            </div>
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Your Email *
+                </label>
+                <Input
+                  type="email"
+                  placeholder="Enter your email"
+                  {...register("email", {
+                    required: "Email is required",
+                    pattern: {
+                      value: /^\S+@\S+$/i,
+                      message: "Invalid email address",
+                    },
+                  })}
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-xs">{errors.email.message}</p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Phone Number *
-              </label>
-              <Input
-                type="tel"
-                placeholder="Type Your Number"
-                {...register("phone", { required: "Phone number is required" })}
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-xs">{errors.phone.message}</p>
-              )}
-            </div>
-          
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Phone Number *
+                </label>
+                <Input
+                  type="tel"
+                  placeholder="Type Your Number"
+                  {...register("phone", { required: "Phone number is required" })}
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-xs">{errors.phone.message}</p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Post Code *
-              </label>
-              <Input
-                placeholder="Enter Post Code"
-                {...register("postCode", { required: "Post code is required" })}
-              />
-              {errors.postCode && (
-                <p className="text-red-500 text-xs">
-                  {errors.postCode.message}
-                </p>
-              )}
+
+              <div>
+                <label className="block text-sm font-medium mb-1">
+                  Post Code *
+                </label>
+                <Input
+                  placeholder="Enter Post Code"
+                  {...register("postCode", { required: "Post code is required" })}
+                />
+                {errors.postCode && (
+                  <p className="text-red-500 text-xs">
+                    {errors.postCode.message}
+                  </p>
+                )}
+              </div>
             </div>
-          </div>
-          <div>
+            <div>
               <label className="block text-sm font-medium mb-1">
                 Booking Category *
               </label>
               <select
                 value={bookingCategory}
                 onChange={(e) => setBookingCategory(e.target.value)}
-                className={`w-full border px-4 py-2 rounded-md ${
-                  formErrors.bookingCategory ? "border-red-500" : ""
-                }`}
+                className={`w-full border px-4 py-2 rounded-md ${formErrors.bookingCategory ? "border-red-500" : ""
+                  }`}
               >
                 <option value="">Select Booking Category</option>
                 <option value="home_less_20">Home – Less than 20 pax</option>
@@ -334,54 +338,83 @@ const CheckoutPage = ({ params }: Props) => {
                 </p>
               )}
             </div>
-          <div>
-            <label className="block text-sm font-medium mb-1">
-              Your Address
-            </label>
-            <Input placeholder="Enter Your Address" {...register("address")} />
-          </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">
+                Your Address
+              </label>
+              <Input placeholder="Enter Your Address" {...register("address")} />
+            </div>
 
-          <div>
-            <label className="block text-sm font-medium mb-1">Order Note</label>
-            <textarea
-              placeholder="Type Order Note (Max 190 Characters)"
-              maxLength={190}
-              className="w-full border px-4 py-2 rounded-md"
-              {...register("orderNote")}
-            ></textarea>
-          </div>
+            <div>
+              <label className="block text-sm font-medium mb-1">Order Note</label>
+              <textarea
+                placeholder="Type Order Note (Max 190 Characters)"
+                maxLength={190}
+                className="w-full border px-4 py-2 rounded-md"
+                {...register("orderNote")}
+              ></textarea>
+            </div>
 
-          {/* Submit Button */}
-          {getUserResponse && getUserResponse.User ? (
-            <Button
-              type="submit"
-              className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white"
-            >
-              Proceed to Pay ₹{total.toFixed(2)}
-            </Button>
-          ) : (
-            <Button
-              type="button"
-              className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
-              onClick={() => {
-                alert("Please login to proceed with the booking.");
-                router.push("/login"); // Navigate to /login
+            {/* Submit Button */}
+            {getUserResponse && getUserResponse.User ? (
+              <Button
+                type="submit"
+                className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white"
+              >
+                Book Now
+              </Button>
 
-              }}
-            >
-              Sign In
-            </Button>
-          )}</>}
-      
+            ) : (
+              <Button
+                type="button"
+                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+                onClick={() => {
+                  alert("Please login to proceed with the booking.");
+                  router.push("/login"); // Navigate to /login
+
+                }}
+              >
+                Sign In
+              </Button>
+            )}</>}
+
+
         </form>
 
         {/* Right Side - Booking Summary */}
         <div className="border p-6 rounded-xl shadow-md">
           <h2 className="text-xl font-bold mb-4">Booking Summary</h2>
 
+
+
           <div className="mb-4">
             <h3 className="font-semibold text-lg">{artist?.title}</h3>
             <p className="text-sm text-gray-500">Artist: {artist?.title}</p>
+          </div>
+                   <div className="mb-2">
+  <div className="flex justify-between items-center">
+    <p className="mr-4">
+      Equipped With:<br />
+      {artist.facilities.join(', ')}
+    </p>
+
+    <a
+      href={`tel:${artist.phoneNumber}`}
+      className="text-blue-600 underline flex items-center space-x-2"
+    >
+      <span>Request Call Back</span>
+      <span role="img" aria-label="phone">📞</span>
+    </a>
+  </div>
+</div>
+
+          <div className="mt-6 space-y-2">
+            {Object.entries(storedData).map(([key, value], index) => (
+              <div key={index} className="flex justify-between py-1 text-sm">
+                <span className="text-gray-700 font-medium">{key}</span>
+                <span className="text-gray-900 font-normal truncate max-w-[60%] text-right">{value}</span>
+              </div>
+            ))}
           </div>
 
           <div className="flex justify-between py-2 border-t text-sm">
@@ -415,6 +448,9 @@ const CheckoutPage = ({ params }: Props) => {
               Apply
             </Button>
           </div>
+
+
+
         </div>
       </div>
     </div>

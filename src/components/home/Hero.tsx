@@ -100,7 +100,7 @@ const Hero = () => {
             </button>
             <h2 className="text-lg font-semibold mb-4">Choose Booking Type</h2>
             <div className="flex justify-between gap-4">
-              <Link href="#" className="flex-1">
+              <Link href="#" className="flex-1" onClick={() => setIsModalOpen(true)}>
                 <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow cursor-pointer transition">
                   <Image
                     src="https://giggili.com/assets/uploads/media-uploader/express-delivery1734088773.png"
@@ -114,13 +114,14 @@ const Hero = () => {
                   </span>
                 </div>
               </Link>
-              <Link href="/category/28" className="flex-1">
+              <Link href="#" className="flex-1" onClick={() => setIsModalOpen(true)}>
                 <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow cursor-pointer transition">
                   <Image
                     src="https://giggili.com/assets/uploads/media-uploader/booking1734088770.png"
                     alt="Regular"
                     width={40}
                     height={40}
+                     onClick={() => setIsModalOpen(true)}
                   />
                   <span className="mt-2 text-sm font-medium">
                     Regular Booking

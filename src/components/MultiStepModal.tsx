@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Dialog } from "@headlessui/react";
 
 interface StepField {
@@ -7,16 +7,16 @@ interface StepField {
   description?: string;
   options?: string[];
   inputType?: "text" | "date";
-  Number?: any;
+  Number?: number;
 }
 
 const stepFields: StepField[] = [
   {
-    title: "Find the perfect\nprofessional for you",
+    title: "Find the perfect professional for you",
     description:
-      "Get free quotes within minutes\nPopular: House Cleaning, Web Design, Personal Trainers",
+      "Get free quotes within minutes\nPopular: DJ , Live Singer, Band Musician, etc",
     inputType: "text",
-    Number:6
+    Number: 6,
   },
   {
     title: "What type of event do you need a DJ for?",
@@ -116,14 +116,7 @@ const stepFields: StepField[] = [
   {
     title: "What is the date when the DJ is needed?",
     inputType: "date",
-  },
-  {
-    title: "Where do you need the DJ?",
-    description: "The postcode or town for the address where you want the DJ.",
-    inputType: "text",
-    Number:6
-
-  },
+  }
 ];
 
 interface Props {
@@ -134,16 +127,27 @@ interface Props {
 const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(0);
   const current = stepFields[step];
-  const [selectedValues, setSelectedValues] = useState<{
-    [key: number]: string;
-  }>({});
+
+  // For animating step content fade & slide
+  const [animate, setAnimate] = useState(false);
+
+  const [selectedValues, setSelectedValues] = useState<{ [title: string]: string }>({});
+
+  // Animate content on step change
+  useEffect(() => {
+    setAnimate(true);
+    const timer = setTimeout(() => setAnimate(false), 300);
+    return () => clearTimeout(timer);
+  }, [step]);
 
   const handleOptionSelect = (value: string) => {
-    setSelectedValues((prev) => ({ ...prev, [step]: value }));
+    setSelectedValues((prev) => ({
+      ...prev,
+      [current.title]: value,
+    }));
   };
 
-  const handleNext = () =>
-    setStep((prev) => Math.min(prev + 1, stepFields.length - 1));
+  const handleNext = () => setStep((prev) => Math.min(prev + 1, stepFields.length - 1));
   const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
 
   return (
@@ -151,77 +155,100 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
       open={isOpen}
       onClose={onClose}
       className="fixed z-50 inset-0 overflow-y-auto"
+      static
     >
       <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-30">
-        <Dialog.Panel className="bg-white p-6 w-full max-w-xl rounded-md shadow-lg">
-          <h2 className="text-xl font-semibold whitespace-pre-line">
-            {current.title}
-          </h2>
+        <Dialog.Panel
+          className={`bg-white p-6 w-full max-w-xl rounded-md shadow-lg
+          transform transition-all duration-300
+          ${isOpen ? "opacity-100 scale-100" : "opacity-0 scale-95"}`}
+        >
+          {/* Animate step content */}
+          <div
+            className={`transition-all duration-300 ease-in-out
+            ${animate ? "opacity-0 translate-x-4" : "opacity-100 translate-x-0"}`}
+          >
+            <h2 className="text-xl font-semibold whitespace-pre-line">{current.title}</h2>
 
-          {current.description && (
-            <p className="text-gray-500 mt-2 whitespace-pre-line">
-              {current.description}
-            </p>
-          )}
+            {current.description && (
+              <p className="text-gray-500 mt-2 whitespace-pre-line">{current.description}</p>
+            )}
 
-          {current.options && (
-            <div className="mt-4 space-y-2">
-              {current.options.map((opt, idx) => (
-                <label
-                  key={idx}
-                  className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
+            {current.options && (
+              <div className="mt-4 space-y-2">
+                {current.options.map((opt, idx) => (
+                  <label
+                    key={idx}
+                    className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
+                  >
+                    <input
+                      type="radio"
+                      name={`step-${step}`}
+                      value={opt}
+                      checked={selectedValues[current.title] === opt}
+                      onChange={() => handleOptionSelect(opt)}
+                    />
+                    <span>{opt}</span>
+                  </label>
+                ))}
+              </div>
+            )}
+
+            {current.inputType === "text" && (
+              <input
+                type="text"
+                placeholder="Enter your postcode or town"
+                className="mt-4 w-full border rounded p-2"
+                maxLength={current.Number}
+                value={selectedValues[current.title] || ""}
+                onChange={(e) =>
+                  setSelectedValues((prev) => ({
+                    ...prev,
+                    [current.title]: e.target.value,
+                  }))
+                }
+              />
+            )}
+
+            {current.inputType === "date" && (
+              <input
+                type="date"
+                className="mt-4 w-full border rounded p-2"
+                value={selectedValues[current.title] || ""}
+                onChange={(e) =>
+                  setSelectedValues((prev) => ({
+                    ...prev,
+                    [current.title]: e.target.value,
+                  }))
+                }
+              />
+            )}
+
+            <div className="mt-6 flex justify-between">
+              {step > 0 && (
+                <button onClick={handleBack} className="text-blue-600 hover:underline">
+                  Back
+                </button>
+              )}
+              {step < stepFields.length - 1 ? (
+                <button
+                  onClick={handleNext}
+                  className="ml-auto bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700"
                 >
-                  <input
-                    type="radio"
-                    name={`step-${step}`}
-                    value={opt}
-                    checked={selectedValues[step] === opt}
-                    onChange={() => handleOptionSelect(opt)}
-                  />
-                  <span>{opt}</span>
-                </label>
-              ))}
+                  Continue
+                </button>
+              ) : (
+                <button
+                  onClick={() => {
+                    localStorage.setItem("djFormResponses", JSON.stringify(selectedValues));
+                    onClose();
+                  }}
+                  className="ml-auto bg-green-600 text-white px-4 py-2 rounded font-medium hover:bg-green-700"
+                >
+                  Finish
+                </button>
+              )}
             </div>
-          )}
-
-          {current.inputType === "text" && (
-            <input
-              type="text"
-              placeholder="Enter your postcode or town"
-              className="mt-4 w-full border rounded p-2"
-              maxLength={current.Number}
-              
-            />
-          )}
-
-          {current.inputType === "date" && (
-            <input type="date" className="mt-4 w-full border rounded p-2" />
-          )}
-
-          <div className="mt-6 flex justify-between">
-            {step > 0 && (
-              <button
-                onClick={handleBack}
-                className="text-blue-600 hover:underline "
-              >
-                Back
-              </button>
-            )}
-            {step < stepFields.length - 1 ? (
-              <button
-                onClick={handleNext}
-                className="ml-auto bg-blue-600 text-white px-4 py-2 rounded bg-primary hover:bg-primary/90 text-white font-medium"
-              >
-                Continue
-              </button>
-            ) : (
-              <button
-                onClick={onClose}
-                className="ml-auto bg-green-600 text-white px-4 py-2 rounded"
-              >
-                Finish
-              </button>
-            )}
           </div>
         </Dialog.Panel>
       </div>
