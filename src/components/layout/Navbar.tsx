@@ -79,7 +79,7 @@ const Navbar = () => {
         {/* Logo */}
         <Link href="/" className="flex items-center">
           <Image
-            src="https://ext.same-assets.com/1887355265/3176037600.png"
+            src={require(`../../asset/giggili-logo.png`)}
             alt="Giggili Logo"
             width={130}
             height={50}

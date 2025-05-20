@@ -8,6 +8,7 @@ interface StepField {
   options?: string[];
   inputType?: "text" | "date";
   Number?: number;
+  multiple?: boolean;
 }
 
 const stepFields: StepField[] = [
@@ -23,9 +24,9 @@ const stepFields: StepField[] = [
     options: [
       "Birthday Party - Adult",
       "Birthday Party - Child",
-      "Office party",
-      "Special Birthday Party (e.g 16th, 18th, 21st, 30th)",
+      "Get together",
       "Wedding",
+      "Anniversary",
       "Other",
     ],
   },
@@ -41,6 +42,7 @@ const stepFields: StepField[] = [
       "Mixed ages",
       "Other",
     ],
+    multiple: true,
   },
   {
     title: "Approximately how many guests is this for?",
@@ -56,16 +58,6 @@ const stepFields: StepField[] = [
     ],
   },
   {
-    title: "How long do you need a DJ for?",
-    options: [
-      "Less than 2 hours",
-      "2 - 4 hours",
-      "4 - 6 hours",
-      "6 hours or more",
-      "Other",
-    ],
-  },
-  {
     title: "Which types of DJ service would you consider?",
     options: [
       "Walk in DJ using my/venue's equipment",
@@ -77,26 +69,47 @@ const stepFields: StepField[] = [
   {
     title: "Which type(s) of music would you consider?",
     options: [
-      "Country",
-      "Hip-hop / Rap",
-      "House",
-      "Latin",
-      "Pop",
-      "R&B / Soul",
-      "Rock",
-      "Top 40",
+      "Bollywood",
+      "Punjabi",
+      "House Music",
+      "Techno",
+      "Rock/Retro",
+      "Commercial",
+      "Pop/Hip-Hop",
+      "Other",
+    ],
+  },
+  {
+    title: "Regional",
+    options: [
+      "Kannada",
+      "Tamil",
+      "Telugu",
+      "Malayalam",
+      "Other",
+    ],
+  },
+  {
+    title: "Which type(s) of Sub genres of House Music ?",
+    options: [
+      "Classic House",
+      "Afro House",
+      "Tech House",
+      "Progressive House",
+      "Deep House",
+      "Other",
     ],
   },
   {
     title: "What type of venue is this for?",
     options: [
-      "Hotel/Conference venue",
-      "Local Hall/Community Centre",
-      "Nightclub",
-      "Private Residence",
-      "Pub/Bar",
+      "Private residence",
+      "Community hall",
+      "Club house",
+      "Resort",
+      "Farm house",
       "Restaurant",
-      "Social Club",
+      "Clubs",
       "Other",
     ],
   },
@@ -116,7 +129,7 @@ const stepFields: StepField[] = [
   {
     title: "What is the date when the DJ is needed?",
     inputType: "date",
-  }
+  },
 ];
 
 interface Props {
@@ -128,13 +141,26 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
   const [step, setStep] = useState(0);
   const current = stepFields[step];
 
-  const [selectedValues, setSelectedValues] = useState<{ [title: string]: string }>({});
+  const [selectedValues, setSelectedValues] = useState<{
+    [title: string]: string | string[];
+  }>({});
 
   const handleOptionSelect = (value: string) => {
-    setSelectedValues((prev) => ({
-      ...prev,
-      [current.title]: value,
-    }));
+    if (current.multiple) {
+      const existing = selectedValues[current.title] as string[] | undefined;
+      const updated = existing?.includes(value)
+        ? existing.filter((v) => v !== value)
+        : [...(existing || []), value];
+      setSelectedValues((prev) => ({
+        ...prev,
+        [current.title]: updated,
+      }));
+    } else {
+      setSelectedValues((prev) => ({
+        ...prev,
+        [current.title]: value,
+      }));
+    }
   };
 
   const handleNext = () => setStep((prev) => Math.min(prev + 1, stepFields.length - 1));
@@ -152,21 +178,27 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
           {current.options && (
             <div className="mt-4 space-y-2">
-              {current.options.map((opt, idx) => (
-                <label
-                  key={idx}
-                  className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
-                >
-                  <input
-                    type="radio"
-                    name={`step-${step}`}
-                    value={opt}
-                    checked={selectedValues[current.title] === opt}
-                    onChange={() => handleOptionSelect(opt)}
-                  />
-                  <span>{opt}</span>
-                </label>
-              ))}
+              {current.options.map((opt, idx) => {
+                const isSelected = current.multiple
+                  ? (selectedValues[current.title] as string[] | undefined)?.includes(opt)
+                  : selectedValues[current.title] === opt;
+
+                return (
+                  <label
+                    key={idx}
+                    className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
+                  >
+                    <input
+                      type={current.multiple ? "checkbox" : "radio"}
+                      name={`step-${step}`}
+                      value={opt}
+                      checked={isSelected}
+                      onChange={() => handleOptionSelect(opt)}
+                    />
+                    <span>{opt}</span>
+                  </label>
+                );
+              })}
             </div>
           )}
 
@@ -176,7 +208,7 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
               placeholder="Enter your postcode or town"
               className="mt-4 w-full border rounded p-2"
               maxLength={current.Number}
-              value={selectedValues[current.title] || ""}
+              value={(selectedValues[current.title] as string) || ""}
               onChange={(e) =>
                 setSelectedValues((prev) => ({
                   ...prev,
@@ -190,7 +222,7 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
             <input
               type="date"
               className="mt-4 w-full border rounded p-2"
-              value={selectedValues[current.title] || ""}
+              value={(selectedValues[current.title] as string) || ""}
               onChange={(e) =>
                 setSelectedValues((prev) => ({
                   ...prev,
