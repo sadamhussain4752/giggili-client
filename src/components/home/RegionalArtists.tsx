@@ -34,14 +34,14 @@ const RegionalArtists = () => {
               <div className="flex justify-between items-center mb-8">
                 <h2 className="text-xl font-bold">{region.service_area}</h2>
                 <Link
-                  href="/service-list"
+                  href={`/area/${region.id}`}
                   className="text-sm text-primary flex items-center gap-1 hover:underline"
                 >
                   View All <ChevronRight className="w-4 h-4" />
                 </Link>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {region.tasks.slice(0, 4).map((artist: any) => (
+                {region.tasks.filter((i: any) => i.vip === "0" && i.price !== "0").slice(0, 4).map((artist: any) => (
                   <ArtistCard key={artist.id} artist={artist} />
                 ))}
               </div>

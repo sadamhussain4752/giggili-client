@@ -121,7 +121,7 @@ const CheckoutPage = ({ params }: Props) => {
     );
 
   const sessionPrice = Number(artist?.price) || 0;
-  const additionalServicePrice = 200;
+  const additionalServicePrice = 1000;
   const subtotal = sessionPrice + additionalServicePrice;
   const tax = parseFloat((subtotal * 0.18).toFixed(2));
   const total = parseFloat((subtotal + tax).toFixed(2));
@@ -235,7 +235,15 @@ const CheckoutPage = ({ params }: Props) => {
             {getUserResponse?.User?.name ? <div className="text-sm text-gray-500 mt-2">
               You are logged in as {getUserResponse?.User?.name}
             </div> : (
-              <Button className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4">
+              <Button
+                type="button"
+                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+                onClick={() => {
+                  alert("Please login to proceed with the booking.");
+                  router.push("/login"); // Navigate to /login
+
+                }}
+              >
                 Sign In
               </Button>
             )}

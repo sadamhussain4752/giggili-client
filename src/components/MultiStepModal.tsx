@@ -22,9 +22,10 @@ const stepFields: StepField[] = [
   {
     title: "What type of event do you need a DJ for?",
     options: [
+      "Get together",
       "Birthday Party - Adult",
       "Birthday Party - Child",
-      "Get together",
+      
       "Wedding",
       "Anniversary",
       "Other",
@@ -78,6 +79,7 @@ const stepFields: StepField[] = [
       "Pop/Hip-Hop",
       "Other",
     ],
+     multiple: true,
   },
   {
     title: "Regional",
@@ -89,17 +91,17 @@ const stepFields: StepField[] = [
       "Other",
     ],
   },
-  {
-    title: "Which type(s) of Sub genres of House Music ?",
-    options: [
-      "Classic House",
-      "Afro House",
-      "Tech House",
-      "Progressive House",
-      "Deep House",
-      "Other",
-    ],
-  },
+  // {
+  //   title: "Which type(s) of Sub genres of House Music ?",
+  //   options: [
+  //     "Classic House",
+  //     "Afro House",
+  //     "Tech House",
+  //     "Progressive House",
+  //     "Deep House",
+  //     "Other",
+  //   ],
+  // },
   {
     title: "What type of venue is this for?",
     options: [

@@ -60,13 +60,13 @@ const TrendingArtists = () => {
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold">Trending Artists</h2>
-          <Link href="/service-list" className="text-sm text-primary flex items-center gap-1 hover:underline">
+          <Link href="/category/28" className="text-sm text-primary flex items-center gap-1 hover:underline">
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {storelist?.filter((i: any) => i.vip === "0").slice(0, 8).map((artist: any) => (
+        {storelist?.filter((i: any) => i.vip === "0" && i.price !== "0" && i.status === "1").slice(0, 8).map((artist: any) => (
             <ArtistCard key={artist.id} artist={artist} />
           ))}
         </div>
@@ -75,7 +75,7 @@ const TrendingArtists = () => {
       <div className="container mx-auto px-4 mt-10">
         <div className="flex justify-between items-center mb-8">
           <h2 className="text-2xl md:text-3xl font-bold">Most Booked Artists</h2>
-          <Link href="/service-list" className="text-sm text-primary flex items-center gap-1 hover:underline">
+          <Link href="/category/28" className="text-sm text-primary flex items-center gap-1 hover:underline">
             View All <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
