@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { VerifyOTP, AddOrderProductById } from "@/reducer/thunks";
 import { useRouter } from "next/navigation";
+import { Modal, Result } from "antd";
 
 declare global {
   interface Window {
@@ -38,9 +39,12 @@ const CheckoutPage = ({ params }: Props) => {
   const [area, setArea] = useState('');
   const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
   const entries = Object.entries(storedData);
+  const [OrderId, setOrderId] = useState(false);
 
   const INITIAL_VISIBLE = 4; // number of items to show initially
   const [showAll, setShowAll] = useState(false);
+    const [ViewMore, setViewMore] = useState(false);
+
 
   const visibleEntries = showAll ? entries : entries.slice(0, INITIAL_VISIBLE); const [coupon, setCoupon] = useState('');
 
@@ -183,6 +187,7 @@ const CheckoutPage = ({ params }: Props) => {
           // Optionally: call your backend to verify the payment
 
           dispatch(AddOrderProductById(bookingData));
+          setOrderId(true)
         },
         prefill: {
           name: data.name,
@@ -399,30 +404,41 @@ const CheckoutPage = ({ params }: Props) => {
             <h3 className="font-semibold text-lg">{artist?.title}</h3>
             <p className="text-sm text-gray-500">Artist: {artist?.title}</p>
           </div>
-                   <div className="mb-2">
-  <div className="flex justify-between items-center">
-    <p className="mr-4">
-      Equipped With:<br />
-      {artist.facilities.join(', ')}
-    </p>
+          <div className="mb-2">
+            <div className="flex justify-between items-center">
+              <p className="mr-4">
+                Equipped With:<br />
+                {artist.facilities.join(', ')}
+              </p>
 
-    <a
-      href={`tel:${artist.phoneNumber}`}
-      className="text-blue-600 underline flex items-center space-x-2"
-    >
-      <span>Request Call Back</span>
-      <span role="img" aria-label="phone">📞</span>
-    </a>
-  </div>
-</div>
+              <a
+                href={`tel:${artist.phoneNumber}`}
+                className="text-blue-600 underline flex items-center space-x-2"
+              >
+                <span>Request Call Back</span>
+                <span role="img" aria-label="phone">📞</span>
+              </a>
 
+               
+            </div>
+            <div
+                className="text-blue-600 flex items-center space-x-2"
+                onClick={()=>{
+                  setViewMore(!ViewMore)
+                }}
+              >
+                <span>{!ViewMore ? "Read More" :"View Less"}</span>
+              </div>
+          </div>
+          
           <div className="mt-6 space-y-2">
-            {Object.entries(storedData).map(([key, value], index) => (
+            {ViewMore && Object.entries(storedData).map(([key, value], index) => (
               <div key={index} className="flex justify-between py-1 text-sm">
                 <span className="text-gray-700 font-medium">{key}</span>
                 <span className="text-gray-900 font-normal truncate max-w-[60%] text-right">{value}</span>
               </div>
             ))}
+            
           </div>
 
           <div className="flex justify-between py-2 border-t text-sm">
@@ -461,6 +477,40 @@ const CheckoutPage = ({ params }: Props) => {
 
         </div>
       </div>
+     <Modal
+      visible={OrderId}
+      onCancel={() => {
+        window.history.back(); // Go back on modal cancel
+      }}
+      width="770px"
+      style={{ marginTop: "2%" }}
+      footer={null}
+    >
+      <Result
+        status="success"
+        title="DJ Booking Confirmed"
+        subTitle={`Thank you! Your DJ booking has been successfully confirmed. Booking ID: ${OrderId}. Our team will reach out to you shortly with further details.`}
+        extra={[
+          <Button
+            onClick={() => {
+              window.location.href = '/';  // Redirect to Home page
+            }}
+            type="primary"
+            key="viewBooking"
+          >
+            Home
+          </Button>,
+          <Button
+            key="newBooking"
+            onClick={() => {
+              window.history.back(); // Go back to previous page
+            }}
+          >
+            Go Back
+          </Button>,
+        ]}
+      />
+    </Modal>
     </div>
   );
 };

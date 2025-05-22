@@ -1,197 +1,211 @@
-'use client'
+'use client';
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from 'react';
+import { Button, Form, Input, Select, Checkbox, Space, Row, Col } from 'antd';
+import { useDispatch, useSelector } from 'react-redux';
+import { CreateUserData } from "@/reducer/thunks";
+
+const { Option } = Select;
 
 const Register: React.FC = () => {
-  const [step, setStep] = useState<number>(1);
+  const dispatch = useDispatch<any>();
+  const {
+    loading: createUserLoading,
+    error: createUserError,
+    userData: createUserResponse,
+  } = useSelector((state: any) => state.userData);
 
-  const nextStep = () => setStep((prev) => prev + 1);
-  const prevStep = () => setStep((prev) => prev - 1);
+  const [form] = Form.useForm();
+  const [agreed, setAgreed] = useState(false);
+
+  useEffect(() => {
+    if (createUserResponse) {
+        if (typeof window !== "undefined" && createUserResponse?.user) {
+      // localStorage.setItem("userId", loginResponse.userId);
+      localStorage.setItem("tokenId", createUserResponse.token);
+
+      // Redirect to home page after setting the localStorage
+      window.location.href = "/";
+    }
+    }
+    if (createUserError) {
+      alert(createUserError);
+    }
+  }, [createUserResponse, createUserError]);
+
+  const onFinish = (values: any) => {
+    if (!agreed) {
+      alert('You must agree to the terms and conditions.');
+      return;
+    }
+
+    const payload = {
+      firstname: values.fullName,
+      lastname: values.userName,
+      mobilenumber: values.phone,
+      email: values.email,
+      password: values.password,
+      serviceCountry: values.serviceCountry,
+      serviceCity: values.serviceCity,
+      serviceArea: values.serviceArea,
+      UserType: "1",
+    };
+
+    dispatch(CreateUserData(payload));
+  };
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 p-4">
-      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-4xl">
-        {/* Stepper */}
-        <div className="flex items-center justify-center mb-8">
-          {[1, 2, 3].map((s) => (
-            <div key={s} className="flex items-center">
-              <div
-                className={`w-10 h-10 flex items-center justify-center rounded-full ${
-                  step === s
-                    ? "bg-orange-500 text-white"
-                    : "border border-gray-300 text-gray-400"
-                }`}
+      <div className="bg-white p-8 rounded-lg shadow-md w-full max-w-3xl">
+        <div className="text-center mb-6 text-xl font-semibold">Sign Up</div>
+
+        <Form
+          form={form}
+          layout="vertical"
+          onFinish={onFinish}
+          scrollToFirstError
+        >
+          <Row gutter={16}>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="fullName"
+                label="Full Name"
+                rules={[{ required: true, message: 'Please enter your full name' }]}
               >
-                {s}
-              </div>
-              {s !== 3 && (
-                <div className="w-8 h-1 bg-gray-300 mx-2"></div>
-              )}
-            </div>
-          ))}
-        </div>
+                <Input placeholder="Full Name" />
+              </Form.Item>
+            </Col>
 
-        {/* Step Content */}
-        {step === 1 && (
-          <form className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <div>
-              <label className="block mb-1 font-medium">Full Name *</label>
-              <input
-                type="text"
-                placeholder="Full Name"
-                className="w-full border px-4 py-2 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">User Name *</label>
-              <input
-                type="text"
-                placeholder="User Name"
-                className="w-full border px-4 py-2 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Email Address *</label>
-              <input
-                type="email"
-                placeholder="Your Email"
-                className="w-full border px-4 py-2 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Phone Number *</label>
-              <div className="flex items-center">
-                <span className="px-3 py-2 border border-r-0 rounded-l-md bg-gray-100">
-                   +91
-                </span>
-                <input
-                  type="text"
-                  placeholder="81234 56789"
-                  className="w-full border px-4 py-2 rounded-r-md"
-                />
-              </div>
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Password *</label>
-              <input
-                type="password"
-                placeholder="Password"
-                className="w-full border px-4 py-2 rounded-md"
-              />
-            </div>
-            <div>
-              <label className="block mb-1 font-medium">Confirm Password *</label>
-              <input
-                type="password"
-                placeholder="Confirm Password"
-                className="w-full border px-4 py-2 rounded-md"
-              />
-            </div>
-
-            <div className="md:col-span-2 text-right mt-4">
-              <button
-                type="button"
-                onClick={nextStep}
-                className="bg-orange-500 text-white px-6 py-2 rounded-md hover:bg-orange-600"
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="userName"
+                label="User Name"
+                rules={[{ required: true, message: 'Please enter your user name' }]}
               >
-                Next
-              </button>
-            </div>
-          </form>
-        )}
+                <Input placeholder="User Name" />
+              </Form.Item>
+            </Col>
 
-{step === 2 && (
-  <div>
-    <h2 className="text-xl font-bold mb-6">Step 2: Service Information</h2>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="email"
+                label="Email"
+                rules={[
+                  { required: true, message: 'Please enter your email' },
+                  { type: 'email', message: 'Please enter a valid email' },
+                ]}
+              >
+                <Input placeholder="Email" />
+              </Form.Item>
+            </Col>
 
-    {/* Service Country */}
-    <div className="mb-4">
-      <label className="block mb-1 font-medium">Service Country *</label>
-      <select className="w-full border px-4 py-2 rounded-md">
-        <option value="">Select Country</option>
-        <option value="india">India</option>
-        <option value="usa">USA</option>
-        {/* Add more countries here */}
-      </select>
-    </div>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="phone"
+                label="Phone Number"
+                rules={[{ required: true, message: 'Please enter your phone number' }]}
+              >
+                <Input addonBefore="+91" placeholder="81234 56789" />
+              </Form.Item>
+            </Col>
 
-    {/* Service City */}
-    <div className="mb-4">
-      <label className="block mb-1 font-medium">Service City *</label>
-      <select className="w-full border px-4 py-2 rounded-md">
-        <option value="">Select City</option>
-        <option value="bangalore">Bangalore</option>
-        <option value="mumbai">Mumbai</option>
-        {/* Add more cities here */}
-      </select>
-    </div>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="password"
+                label="Password"
+                rules={[{ required: true, message: 'Please enter your password' }]}
+                hasFeedback
+              >
+                <Input.Password placeholder="Password" />
+              </Form.Item>
+            </Col>
 
-    {/* Service Area */}
-    <div className="mb-4">
-      <label className="block mb-1 font-medium">Service Area *</label>
-      <select className="w-full border px-4 py-2 rounded-md">
-        <option value="">Select Service Area</option>
-        <option value="north-bangalore">North Bangalore</option>
-        <option value="south-bangalore">South Bangalore</option>
-        <option value="east-bangalore">East Bangalore</option>
-        <option value="west-bangalore">West Bangalore</option>
-      </select>
-    </div>
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="confirmPassword"
+                label="Confirm Password"
+                dependencies={['password']}
+                hasFeedback
+                rules={[
+                  { required: true, message: 'Please confirm your password' },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve();
+                      }
+                      return Promise.reject(new Error('Passwords do not match!'));
+                    },
+                  }),
+                ]}
+              >
+                <Input.Password placeholder="Confirm Password" />
+              </Form.Item>
+            </Col>
 
-    <div className="flex justify-between">
-      <button
-        onClick={prevStep}
-        className="px-6 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-      >
-        Back
-      </button>
-      <button
-        onClick={nextStep}
-        className="px-6 py-2 bg-orange-500 text-white rounded-md hover:bg-orange-600"
-      >
-        Next
-      </button>
-    </div>
-  </div>
-)}
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="serviceCountry"
+                label="Service Country"
+                rules={[{ required: true, message: 'Please select a country' }]}
+              >
+                <Select placeholder="Select Country">
+                  <Option value="india">India</Option>
+                </Select>
+              </Form.Item>
+            </Col>
 
+            <Col xs={24} sm={12}>
+              <Form.Item
+                name="serviceCity"
+                label="Service City"
+                rules={[{ required: true, message: 'Please select a city' }]}
+              >
+                <Select placeholder="Select City">
+                  <Option value="51">Bangalore</Option>
+                </Select>
+              </Form.Item>
+            </Col>
 
-{step === 3 && (
-  <div>
-    <h2 className="text-xl font-bold mb-6">Step 3: Terms & Condition</h2>
-    
-    {/* Terms & Conditions */}
-    <div className="mb-6">
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          id="terms"
-          className="mr-2"
-        />
-        <label htmlFor="terms" className="text-sm text-gray-600">
-          I agree to the <a href="/terms" className="text-blue-500 underline">Terms & Conditions</a>
-        </label>
-      </div>
-    </div>
+            <Col xs={24}>
+              <Form.Item
+                name="serviceArea"
+                label="Service Area"
+                rules={[{ required: true, message: 'Please select a service area' }]}
+              >
+                <Select placeholder="Select Area">
+                  <Option value="north-bangalore">North Bangalore</Option>
+                  <Option value="south-bangalore">South Bangalore</Option>
+                  <Option value="east-bangalore">East Bangalore</Option>
+                  <Option value="west-bangalore">West Bangalore</Option>
+                </Select>
+              </Form.Item>
+            </Col>
 
-    <div className="flex justify-between">
-      <button
-        onClick={prevStep}
-        className="px-6 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
-      >
-        Back
-      </button>
-      <button
-        type="submit"
-        disabled={!document.getElementById('terms')}
-        className="px-6 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 disabled:bg-gray-300"
-      >
-        Submit
-      </button>
-    </div>
-  </div>
-)}
+            <Col xs={24}>
+              <Form.Item>
+                <Checkbox checked={agreed} onChange={(e) => setAgreed(e.target.checked)}>
+                  I agree to the{' '}
+                  <a href="/terms" className="text-blue-500 underline" target="_blank" rel="noopener noreferrer">
+                    Terms & Conditions
+                  </a>
+                </Checkbox>
+              </Form.Item>
+            </Col>
+          </Row>
 
+          <Form.Item>
+            <Button
+              type="primary"
+              htmlType="submit"
+              className='w-25'
+              disabled={!agreed || createUserLoading}
+              loading={createUserLoading}
+              block
+            >
+              Submit
+            </Button>
+          </Form.Item>
+        </Form>
       </div>
     </div>
   );

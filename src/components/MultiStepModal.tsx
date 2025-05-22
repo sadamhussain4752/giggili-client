@@ -1,6 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import { Dialog } from "@headlessui/react";
+import { Select, Input } from "antd";
+const { Option } = Select;
 
 interface StepField {
   title: string;
@@ -13,19 +15,11 @@ interface StepField {
 
 const stepFields: StepField[] = [
   {
-    title: "Find the perfect professional for you",
-    description:
-      "Get free quotes within minutes\nPopular: DJ , Live Singer, Band Musician, etc",
-    inputType: "text",
-    Number: 6,
-  },
-  {
     title: "What type of event do you need a DJ for?",
     options: [
       "Get together",
       "Birthday Party - Adult",
       "Birthday Party - Child",
-      
       "Wedding",
       "Anniversary",
       "Other",
@@ -61,9 +55,9 @@ const stepFields: StepField[] = [
   {
     title: "Which types of DJ service would you consider?",
     options: [
-      "Walk in DJ using my/venue's equipment",
+      "DJ using the sound system at the venue",
       "DJ using their own equipment",
-      "Karaoke",
+      // "Karaoke",
       "Other",
     ],
   },
@@ -71,36 +65,20 @@ const stepFields: StepField[] = [
     title: "Which type(s) of music would you consider?",
     options: [
       "Bollywood",
-      "Punjabi",
+      "Bollywood/Punjabi",
       "House Music",
       "Techno",
       "Rock/Retro",
       "Commercial",
       "Pop/Hip-Hop",
+      "Kannada", "Tamil", "Telugu", "Malayalam", "Other",
       "Other",
     ],
-     multiple: true,
-  },
-  {
-    title: "Regional",
-    options: [
-      "Kannada",
-      "Tamil",
-      "Telugu",
-      "Malayalam",
-      "Other",
-    ],
+    multiple: true,
   },
   // {
-  //   title: "Which type(s) of Sub genres of House Music ?",
-  //   options: [
-  //     "Classic House",
-  //     "Afro House",
-  //     "Tech House",
-  //     "Progressive House",
-  //     "Deep House",
-  //     "Other",
-  //   ],
+  //   title: "Regional",
+  //   options: ["Kannada", "Tamil", "Telugu", "Malayalam", "Other"],
   // },
   {
     title: "What type of venue is this for?",
@@ -140,124 +118,121 @@ interface Props {
 }
 
 const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
-  const [step, setStep] = useState(0);
-  const current = stepFields[step];
-
   const [selectedValues, setSelectedValues] = useState<{
     [title: string]: string | string[];
   }>({});
+  const [otherInputs, setOtherInputs] = useState<{ [title: string]: string }>({});
 
-  const handleOptionSelect = (value: string) => {
-    if (current.multiple) {
-      const existing = selectedValues[current.title] as string[] | undefined;
-      const updated = existing?.includes(value)
-        ? existing.filter((v) => v !== value)
-        : [...(existing || []), value];
-      setSelectedValues((prev) => ({
-        ...prev,
-        [current.title]: updated,
-      }));
-    } else {
-      setSelectedValues((prev) => ({
-        ...prev,
-        [current.title]: value,
-      }));
-    }
+  const handleSelectChange = (title: string, value: string | string[]) => {
+    setSelectedValues((prev) => ({
+      ...prev,
+      [title]: value,
+    }));
   };
 
-  const handleNext = () => setStep((prev) => Math.min(prev + 1, stepFields.length - 1));
-  const handleBack = () => setStep((prev) => Math.max(prev - 1, 0));
+  const handleOtherInput = (title: string, value: string) => {
+    setOtherInputs((prev) => ({
+      ...prev,
+      [title]: value,
+    }));
+  };
+
+  const handleFinish = () => {
+    const finalData = { ...selectedValues };
+    Object.entries(otherInputs).forEach(([key, val]) => {
+      if (Array.isArray(finalData[key])) {
+        finalData[key] = [...(finalData[key] as string[]).filter((v) => v !== "Other"), val];
+      } else if (finalData[key] === "Other") {
+        finalData[key] = val;
+      }
+    });
+    localStorage.setItem("djFormResponses", JSON.stringify(finalData));
+    onClose();
+  };
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="fixed z-50 inset-0 overflow-y-auto">
-      <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-30">
-        <Dialog.Panel className="bg-white p-6 w-full max-w-xl rounded-md shadow-lg">
-          <h2 className="text-xl font-semibold whitespace-pre-line">{current.title}</h2>
+      <div className="flex items-center justify-center min-h-screen bg-black bg-opacity-40 px-2 py-8">
+        <Dialog.Panel className="bg-white p-6 w-full max-w-2xl rounded-md shadow-lg max-h-[90vh] overflow-y-auto">
+          <h2 className="text-2xl font-semibold mb-4">Tell us what you need</h2>
 
-          {current.description && (
-            <p className="text-gray-500 mt-2 whitespace-pre-line">{current.description}</p>
-          )}
+          <form className="space-y-6">
+            {stepFields.map((field, index) => (
+              <div key={index}>
+                <p className="font-medium mb-2">{field.title}</p>
+                {field.description && (
+                  <p className="text-gray-500 text-sm mb-2 whitespace-pre-line">
+                    {field.description}
+                  </p>
+                )}
 
-          {current.options && (
-            <div className="mt-4 space-y-2">
-              {current.options.map((opt, idx) => {
-                const isSelected = current.multiple
-                  ? (selectedValues[current.title] as string[] | undefined)?.includes(opt)
-                  : selectedValues[current.title] === opt;
+                {field.options && (
+                  <div className="space-y-2">
+                    <Select
+                      mode={field.multiple ? "multiple" : undefined}
+                      placeholder={`Select ${field.title}`}
+                      style={{ width: "100%" }}
+                      value={selectedValues[field.title]}
+                      onChange={(value) => handleSelectChange(field.title, value)}
+                      allowClear
+                    >
+                      {field.options.map((opt) => (
+                        <Option key={opt} value={opt}>
+                          {opt}
+                        </Option>
+                      ))}
+                    </Select>
 
-                return (
-                  <label
-                    key={idx}
-                    className="flex items-center space-x-3 border p-3 rounded hover:bg-gray-50 cursor-pointer"
-                  >
-                    <input
-                      type={current.multiple ? "checkbox" : "radio"}
-                      name={`step-${step}`}
-                      value={opt}
-                      checked={isSelected}
-                      onChange={() => handleOptionSelect(opt)}
-                    />
-                    <span>{opt}</span>
-                  </label>
-                );
-              })}
-            </div>
-          )}
+                    {(selectedValues[field.title] === "Other" ||
+                      (Array.isArray(selectedValues[field.title]) &&
+                        (selectedValues[field.title] as string[]).includes("Other"))) && (
+                      <Input
+                        placeholder="Please specify"
+                        value={otherInputs[field.title] || ""}
+                        onChange={(e) => handleOtherInput(field.title, e.target.value)}
+                        className="mt-2"
+                      />
+                    )}
+                  </div>
+                )}
 
-          {current.inputType === "text" && (
-            <input
-              type="text"
-              placeholder="Enter your postcode or town"
-              className="mt-4 w-full border rounded p-2"
-              maxLength={current.Number}
-              value={(selectedValues[current.title] as string) || ""}
-              onChange={(e) =>
-                setSelectedValues((prev) => ({
-                  ...prev,
-                  [current.title]: e.target.value,
-                }))
-              }
-            />
-          )}
+                {field.inputType === "text" && (
+                  <Input
+                    placeholder="Enter text"
+                    maxLength={field.Number}
+                    value={(selectedValues[field.title] as string) || ""}
+                    onChange={(e) =>
+                      setSelectedValues((prev) => ({
+                        ...prev,
+                        [field.title]: e.target.value,
+                      }))
+                    }
+                  />
+                )}
 
-          {current.inputType === "date" && (
-            <input
-              type="date"
-              className="mt-4 w-full border rounded p-2"
-              value={(selectedValues[current.title] as string) || ""}
-              onChange={(e) =>
-                setSelectedValues((prev) => ({
-                  ...prev,
-                  [current.title]: e.target.value,
-                }))
-              }
-            />
-          )}
+                {field.inputType === "date" && (
+                  <Input
+                    type="date"
+                    value={(selectedValues[field.title] as string) || ""}
+                    onChange={(e) =>
+                      setSelectedValues((prev) => ({
+                        ...prev,
+                        [field.title]: e.target.value,
+                      }))
+                    }
+                  />
+                )}
+              </div>
+            ))}
+          </form>
 
-          <div className="mt-6 flex justify-between">
-            {step > 0 && (
-              <button onClick={handleBack} className="text-blue-600 hover:underline">
-                Back
-              </button>
-            )}
-            {step < stepFields.length - 1 ? (
-              <button
-                onClick={handleNext}
-                className="ml-auto bg-blue-600 text-white px-4 py-2 rounded font-medium hover:bg-blue-700"
-              >
-                Continue
-              </button>
-            ) : (
-              <button
-                onClick={() => {
-                  localStorage.setItem("djFormResponses", JSON.stringify(selectedValues));
-                  onClose();
-                }}
-                className="ml-auto bg-green-600 text-white px-4 py-2 rounded font-medium hover:bg-green-700"
-              >
-                Finish
-              </button>
-            )}
+          <div className="mt-6 text-right">
+            <button
+              onClick={handleFinish}
+              className="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700"
+            >
+              Submit
+            </button>
           </div>
         </Dialog.Panel>
       </div>
