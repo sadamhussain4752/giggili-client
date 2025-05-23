@@ -1,6 +1,6 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // distDir: 'out', // custom build output folder (only needed if you're using static export)
+  output: 'export', // ✅ Enable static export
   
   images: {
     unoptimized: true, // disables automatic image optimization (good for static hosting)
