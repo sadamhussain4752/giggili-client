@@ -3,14 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
- "scripts": {
-  "dev": "next dev -H 0.0.0.0 --turbopack",
-  "build": "next build",
-  "start": "next start",
-  "export": "next export",                      
-  "lint": "bunx biome lint --write && bunx tsc --noEmit",
-  "format": "bunx biome format --write"
-},
+  "scripts": {
+    "dev": "next dev -H 0.0.0.0 --turbopack",
+    "build": "next build",
+    "start": "next start",
+    "lint": "bunx biome lint --write && bunx tsc --noEmit",
+    "format": "bunx biome format --write"
+  },
   "dependencies": {
     "@headlessui/react": "^2.2.2",
     "@radix-ui/react-dialog": "^1.1.7",
