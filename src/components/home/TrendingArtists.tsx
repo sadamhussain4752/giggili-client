@@ -96,7 +96,7 @@ const ArtistCard = ({ artist }: { artist: typeof TRENDING_ARTISTS[number] }) => 
     <Card className="overflow-hidden hover:shadow-md transition-shadow h-full">
       <div className="relative h-48 bg-gray-100">
         <Image
-          src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
+          src={artist.images ?  artist.images: `https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
           alt={artist.name || 'Artist Image'}
           fill
           className="object-cover"

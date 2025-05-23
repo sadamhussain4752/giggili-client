@@ -219,7 +219,7 @@ export default function ArtistDetailPage({ params }: Props) {
           {/* Left: Banner */}
           <div className="w-full md:w-8/12 mb-2 md:mb-0 h-[380px]">
             <Image
-              src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
+              src={artist.image ?  artist.image:`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
               alt="Event Banner"
               width={1200}
               height={300}
@@ -362,7 +362,7 @@ export default function ArtistDetailPage({ params }: Props) {
           <h2 className="text-2xl font-bold mb-4">Featured Artist</h2>
           <div className="flex flex-col items-start gap-2">
             <Image
-              src={`https://giggili.com/assets/uploads/media-uploader/${artist?.seller_image || "placeholder.jpg"
+              src={artist.images ?  artist.images:`https://giggili.com/assets/uploads/media-uploader/${artist?.seller_image || "placeholder.jpg"
                 }`}
               alt="Artist"
               width={200}
@@ -426,7 +426,7 @@ export default function ArtistDetailPage({ params }: Props) {
               <Card key={item}>
                 <CardContent className="p-4">
                   <Image
-                    src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
+                    src={artist.image_gallery[0] ?  artist.image_gallery[0]:`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
                     alt={`Recommended Artist ${item}`}
                     width={300}
                     height={180}
