@@ -20,7 +20,7 @@ export default function Home() {
   return (
     <>
       <Hero />
-      <PerformerSlider />
+      {/* <PerformerSlider /> */}
       <TrendingArtists />
       <CenteredBanner src={require("../asset/banners3.png")} />
       <RegionalArtists />

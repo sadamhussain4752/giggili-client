@@ -38,6 +38,8 @@ const CheckoutPage = ({ params }: Props) => {
   const [city, setCity] = useState('Bangalore');
   const [area, setArea] = useState('');
   const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
+    const location = localStorage.getItem("location") || "{}"
+
   const entries = Object.entries(storedData);
   const [OrderId, setOrderId] = useState(false);
 
@@ -95,7 +97,7 @@ const CheckoutPage = ({ params }: Props) => {
         name: getUserResponse.User.name || "",
         email: getUserResponse.User.email || "",
         phone: getUserResponse.User.phone || "",
-        address: getUserResponse.User.address || "",
+        address: location || getUserResponse.User.address ,
         postCode: getUserResponse.User.post_code || "",
         bookingCategory: "", // you can set a default here if you want
       });
@@ -125,7 +127,7 @@ const CheckoutPage = ({ params }: Props) => {
     );
 
   const sessionPrice = Number(artist?.price) || 0;
-  const additionalServicePrice = 1000;
+  const additionalServicePrice = 0;
   const subtotal = sessionPrice + additionalServicePrice;
   const tax = parseFloat((subtotal * 0.18).toFixed(2));
   const total = parseFloat((subtotal + tax).toFixed(2));
@@ -322,35 +324,7 @@ const CheckoutPage = ({ params }: Props) => {
                 )}
               </div>
             </div>
-            <div>
-              <label className="block text-sm font-medium mb-1">
-                Booking Category *
-              </label>
-              <select
-                value={bookingCategory}
-                onChange={(e) => setBookingCategory(e.target.value)}
-                className={`w-full border px-4 py-2 rounded-md ${formErrors.bookingCategory ? "border-red-500" : ""
-                  }`}
-              >
-                <option value="">Select Booking Category</option>
-                <option value="home_less_20">Home – Less than 20 pax</option>
-                <option value="private_less_50">
-                  Private gathering – Less than 50 pax
-                </option>
-                <option value="private_50_100">
-                  Private gathering – 50 to 100 pax
-                </option>
-                <option value="private_more_100">
-                  Private gathering – &gt; 100 pax
-                </option>
-                <option value="club_lounge">Club/Lounge event</option>
-              </select>
-              {formErrors.bookingCategory && (
-                <p className="text-red-500 text-xs mt-1">
-                  {formErrors.bookingCategory}
-                </p>
-              )}
-            </div>
+           
             <div>
               <label className="block text-sm font-medium mb-1">
                 Your Address
@@ -359,9 +333,9 @@ const CheckoutPage = ({ params }: Props) => {
             </div>
 
             <div>
-              <label className="block text-sm font-medium mb-1">Order Note</label>
+              <label className="block text-sm font-medium mb-1">Request Giggili</label>
               <textarea
-                placeholder="Type Order Note (Max 190 Characters)"
+                placeholder="Type Request Giggili (Max 190 Characters)"
                 maxLength={190}
                 className="w-full border px-4 py-2 rounded-md"
                 {...register("orderNote")}
@@ -411,13 +385,7 @@ const CheckoutPage = ({ params }: Props) => {
                 {artist.facilities.join(', ')}
               </p>
 
-              <a
-                href={`tel:${artist.phoneNumber}`}
-                className="text-blue-600 underline flex items-center space-x-2"
-              >
-                <span>Request Call Back</span>
-                <span role="img" aria-label="phone">📞</span>
-              </a>
+             
 
                
             </div>

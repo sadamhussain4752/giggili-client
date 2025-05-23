@@ -67,148 +67,7 @@ export default function ArtistDetailPage({ params }: Props) {
     return <div className="text-center py-20">Loading...</div>
   }
   return (
-    // <div className="bg-background">
-    //   {/* Cover Image and Profile */}
-    //   <div className="relative h-[300px] md:h-[400px]">
-    //     {artist?.seller_image && (
-    //       <Image
-    //         src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
-    //         alt={`${artist?.title || 'Artist'} Cover Image`}
-    //         fill
-    //         className="object-cover"
-    //         priority
-    //       />
-    //     )}
-    //     <div className="absolute -bottom-16 left-8 md:left-16 w-32 h-32 md:w-36 md:h-36 rounded-full overflow-hidden border-4 border-white">
-    //       {artist?.seller_image && (
-    //         <Image
-    //           src={`https://giggili.com/assets/uploads/media-uploader/${artist.seller_image}`}
-    //           alt={`${artist?.title || 'Artist'} Profile Image`}
-    //           fill
-    //           className="object-cover"
-    //         />
-    //       )}
-    //     </div>
-    //   </div>
-
-    //   <div className="container mx-auto px-4 pt-20 pb-12">
-    //     {/* Artist Info */}
-    //     <div className="flex flex-col md:flex-row justify-between items-start mb-12">
-    //       <div>
-    //         <h1 className="text-3xl font-bold mb-2">{artist?.title}</h1>
-    //         <div className="flex items-center gap-2 text-muted-foreground">
-    //           <svg
-    //             xmlns="http://www.w3.org/2000/svg"
-    //             fill="none"
-    //             viewBox="0 0 24 24"
-    //             stroke="currentColor"
-    //             className="w-4 h-4"
-    //           >
-    //             <path
-    //               strokeLinecap="round"
-    //               strokeLinejoin="round"
-    //               strokeWidth={2}
-    //               d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-    //             />
-    //             <path
-    //               strokeLinecap="round"
-    //               strokeLinejoin="round"
-    //               strokeWidth={2}
-    //               d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-    //             />
-    //           </svg>
-    //           {artist?.location || 'Bangalore, India'}
-    //         </div>
-    //         <div className="flex flex-wrap gap-2 mt-4">
-    //           {artist?.Categories_Name?.map((tag: string) => (
-    //             <span
-    //               key={`${artist.id}-${tag}`}
-    //               className="bg-primary text-white text-xs px-3 py-1 rounded-full"
-    //             >
-    //               {tag}
-    //             </span>
-    //           ))}
-    //         </div>
-    //       </div>
-
-    //       <div className="mt-4 md:mt-0 flex items-center gap-2">
-
-    //       <Link href={`/service-list/artist/${artist?._id}`} >
-    //         <Button variant="outline" className="flex items-center gap-2">
-    //           <svg
-    //             xmlns="http://www.w3.org/2000/svg"
-    //             fill="none"
-    //             viewBox="0 0 24 24"
-    //             stroke="currentColor"
-    //             className="w-5 h-5"
-    //           >
-    //             <path
-    //               strokeLinecap="round"
-    //               strokeLinejoin="round"
-    //               strokeWidth={2}
-    //               d="M14 5l7 7m0 0l-7 7m7-7H3"
-    //             />
-    //           </svg>
-    //           Know your artist
-    //         </Button>
-    //         </Link>
-    //         <p className="text-lg font-semibold">
-    //           {/* <span className="text-sm font-normal">From: </span> */}
-    //           {/* {artist?.price || '₹0.00'} */}
-    //         </p>
-    //       </div>
-    //     </div>
-
-    //     <hr className="my-8 border-muted" />
-
-    //     {/* Packages Section */}
-    //     <div className="mb-10">
-    //       <h2 className="text-2xl font-bold mb-6">Package</h2>
-    //       <Card className="border border-muted">
-    //         <CardContent className="p-6">
-    //           <div className="flex justify-between items-center mb-4">
-    //             <h3 className="text-xl font-semibold">{artist?.price}</h3>
-    //           </div>
-
-    //           <h4 className="text-lg font-medium mb-4">
-    //             Available Service Packages
-    //           </h4>
-
-    //           <ul className="space-y-3 mb-6">
-    //             {artist?.packages?.map((pkg: Package) => (
-    //               <li
-    //                 key={pkg.id}
-    //                 className="flex items-center gap-2 text-sm text-muted-foreground"
-    //               >
-    //                 <span className="h-5 w-5 rounded-full border border-primary flex items-center justify-center text-primary">
-    //                   <svg
-    //                     xmlns="http://www.w3.org/2000/svg"
-    //                     fill="none"
-    //                     viewBox="0 0 24 24"
-    //                     stroke="currentColor"
-    //                     className="w-3 h-3"
-    //                   >
-    //                     <path
-    //                       strokeLinecap="round"
-    //                       strokeLinejoin="round"
-    //                       strokeWidth={2}
-    //                       d="M5 13l4 4L19 7"
-    //                     />
-    //                   </svg>
-    //                 </span>
-    //                 {pkg.name} - {pkg.price}
-    //               </li>
-    //             ))}
-    //           </ul>
-
-    //           <Link href={`/checkout/${artist?._id}`} >
-    //             <Button className="w-full">Book Now</Button>
-    //           </Link>
-    //         </CardContent>
-    //       </Card>
-    //     </div>
-    //   </div>
-    // </div>
+   
     <div className="bg-background">
 
 
@@ -223,6 +82,7 @@ export default function ArtistDetailPage({ params }: Props) {
               alt="Event Banner"
               width={1200}
               height={300}
+                loading="lazy"
               className="rounded-lg object-cover w-full h-full"
             />
           </div>
@@ -235,16 +95,17 @@ export default function ArtistDetailPage({ params }: Props) {
             <div className="sticky top-24 z-10">
               <Card className="border border-muted shadow-lg">
                 <CardContent className="p-6">
-                  <p className="text-muted-foreground mb-2">{artist.date}</p>
+                  <p className="text-muted-foreground mb-2">  {artist.date && new Date(artist.date).toDateString()}
+</p>
                   <p className="font-semibold text-lg mb-2">{artist.time}</p>
-                  <p className="mb-2">Age: {artist.age_limit}</p>
+                  <p className="mb-2">Experience: {artist.experience}</p>
                   <p className="mb-2">Languages: {artist.languages.join(', ')}</p>
 
                   <p className="mb-2">Genre: {artist.genre}</p>
                   <p className="mb-4">
-                    Location: {artist.location}
+                    {/* Location: {artist.location} */}
                   </p>
-                  <div className="font-bold text-xl mb-2">₹{artist.price} onwards</div>
+                  <div className="font-bold text-xl mb-2">₹{artist.price}</div>
                   <Link href={`/checkout/${artist._id}`}>
                     <Button className="w-full">Book Now</Button>
                   </Link>
@@ -289,7 +150,7 @@ export default function ArtistDetailPage({ params }: Props) {
                   d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
                 />
               </svg>
-              {artist?.location || "Bangalore, India"}
+              {"Bangalore, India"}
             </div>
             {/* Category Tags */}
             {artist?.Categories_Name?.length > 0 && (
@@ -327,14 +188,8 @@ export default function ArtistDetailPage({ params }: Props) {
         {/* Service Packages */}
 
 
-        {/* About the Event */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">About the Venue</h2>
-          <p className="text-muted-foreground">
-            Join us for an unforgettable night of music, dance, and celebration
-            with the best talents from across the country!
-          </p>
-        </section>
+        
+     
 
         {/* Facilities and Experience */}
         <section className="mb-10 grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -367,6 +222,7 @@ export default function ArtistDetailPage({ params }: Props) {
               alt="Artist"
               width={200}
               height={200}
+                loading="lazy"
               className="rounded object-cover"
             />
             <div className="flex items-center gap-1 text-muted-foreground text-sm">
@@ -389,26 +245,19 @@ export default function ArtistDetailPage({ params }: Props) {
           </div>
         </section>
 
-        {/* M-Ticket */}
+        {/* M-Ticket
         <section className="mb-10">
           <h2 className="text-2xl font-bold mb-4">M-Ticket</h2>
           <p className="text-muted-foreground">
             Your entry will be confirmed via SMS and Email. No printout
             required. Just show the M-Ticket at the entry gate.
           </p>
-        </section>
+        </section> */}
 
-        {/* About the Venue */}
-        <section className="mb-10">
-          <h2 className="text-2xl font-bold mb-4">About The Venue</h2>
-          <p className="text-muted-foreground">
-            The Grand Arena, Bangalore - A state-of-the-art venue equipped with
-            modern acoustics, seating, and lighting arrangements.
-          </p>
-        </section>
+       
 
         {/* Terms & Conditions */}
-        <section className="mb-10">
+        {/* <section className="mb-10">
           <h2 className="text-2xl font-bold mb-4">Terms & Conditions</h2>
           <ul className="list-disc list-inside text-muted-foreground">
             <li>Entry allowed for individuals aged 18 and above only.</li>
@@ -416,7 +265,7 @@ export default function ArtistDetailPage({ params }: Props) {
             <li>Right of admission reserved by the organizers.</li>
             <li>Unauthorized recording is prohibited.</li>
           </ul>
-        </section>
+        </section> */}
 
         {/* You May Also Like */}
         <section className="mb-10">
@@ -430,9 +279,10 @@ export default function ArtistDetailPage({ params }: Props) {
                     alt={`Recommended Artist ${item}`}
                     width={300}
                     height={180}
+                      loading="lazy"
                     className="rounded mb-3 object-cover"
                   />
-                  <h4 className="font-semibold text-lg">Artist {item}</h4>
+                  {/* <h4 className="font-semibold text-lg">Artist {item}</h4> */}
 
                 </CardContent>
               </Card>
@@ -459,7 +309,7 @@ export default function ArtistDetailPage({ params }: Props) {
       <div className="flex items-center justify-between mb-3">
         <h4 className="text-base font-semibold">{review.name}</h4>
         <div className="text-xs text-muted-foreground">
-          {review.date}
+         {review.date && new Date(review.date).toDateString()} 
         </div>
       </div>
 

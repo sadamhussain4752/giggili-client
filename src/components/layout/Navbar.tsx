@@ -52,6 +52,7 @@ const Navbar = () => {
               );
               setLocationName(city?.long_name || "Unknown Location");
               setFormattedAddress(result.formatted_address);
+              localStorage.setItem("location",result.formatted_address)
             } else {
               setLocationName("Location Unavailable");
             }
@@ -122,12 +123,23 @@ const Navbar = () => {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
-
+           <Link
+            href="/"
+            className="text-foreground hover:text-primary transition-colors font-medium"
+          >
+            Home
+          </Link>
           <Link
             href="/about"
             className="text-foreground hover:text-primary transition-colors font-medium"
           >
             About
+          </Link>
+           <Link
+            href="/category/28"
+            className="text-foreground hover:text-primary transition-colors font-medium"
+          >
+            Service
           </Link>
           <Link
             href="/contact"
@@ -136,70 +148,7 @@ const Navbar = () => {
             Contact
           </Link>
 
-          <div className="relative group">
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button
-                  variant="ghost"
-                  className="flex items-center space-x-1 font-medium"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    className="w-5 h-5"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                    />
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                    />
-                  </svg>
-                  <span>{location === "" ? "View All" : location} </span>
-                  <ChevronDown className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end" className="w-48">
-                <DropdownMenuItem
-                  onClick={() => {
-                    setlocation("North Bangalore");
-                  }}
-                >
-                  {" "}
-                  North Bangalore
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setlocation("South Bangalore");
-                  }}
-                >
-                  South Bangalore
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setlocation("East Bangalore");
-                  }}
-                >
-                  East Bangalore
-                </DropdownMenuItem>
-                <DropdownMenuItem
-                  onClick={() => {
-                    setlocation("West Bangalore");
-                  }}
-                >
-                  West Bangalore
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          </div>
+         
         </nav>
         <div className="hidden md:flex flex-col items-start text-sm text-muted-foreground">
           <div className="flex items-center space-x-1">

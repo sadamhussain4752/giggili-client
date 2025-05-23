@@ -12,7 +12,7 @@ const AboutPage = () => {
             <div className="relative">
               <div className="relative h-[400px] rounded-lg overflow-hidden">
                 <Image
-                  src="https://ext.same-assets.com/3509175360/1138090821.jpeg"
+                  src={require("../../asset/About.webp")}
                   alt="DJ mixing music"
                   fill
                   className="object-cover"
@@ -27,20 +27,20 @@ const AboutPage = () => {
             </div>
 
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-6">Know About Us</h1>
+              <h1 className="text-3xl md:text-4xl font-bold mb-6">About Us</h1>
               <p className="text-muted-foreground mb-6">
-                It is a long established fact that a reader will be distracted by the
-                readable content of a page when looking at its layout. It is a long
-                established fact that a reader will be distracted by the readable content
-                of a page when looking at its layout.
+               At GIGGILI, we bring your events to life with rhythm, energy, and unforgettable performances. Our innovative platform seamlessly connects you with top-tier DJs, singers, and dancers, making it easier than ever to book the perfect talent for any occasion.
+  <br/>
+    <br/>
+  Whether you're planning a house party, corporate event, wedding, or private celebration, GIGGILI lets you browse performer profiles, check availability, and book instantly—all in one place.
+ <br/>
+  <br/>
+ With a focus on quality, convenience, and creativity, we’re redefining how entertainment is discovered and delivered. Let GIGGILI turn your next event into an extraordinary experience.
+
               </p>
 
               <ul className="space-y-3">
-                <FeatureItem text="Complete Sanitization and cleaning of bathroom" />
-                <FeatureItem text="It's a long established way" />
-                <FeatureItem text="Biodegradable chemicals are used" />
-                <FeatureItem text="It's a long established way" />
-                <FeatureItem text="Biodegradable chemicals are used" />
+            
                 <FeatureItem text="It's a long established way" />
               </ul>
             </div>
@@ -52,7 +52,7 @@ const AboutPage = () => {
       <section className="py-12 md:py-16 bg-[#f7f7f9]">
         <div className="container mx-auto px-4">
           <div className="text-center mb-12">
-            <h2 className="text-3xl md:text-4xl font-bold mb-4">Why Our Marketplace?</h2>
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">WHY GIGGILI</h2>
             <p className="text-muted-foreground max-w-2xl mx-auto">
               It is a long established fact that a reader will be distracted by the
               readable content of a page when looking at its layout.
@@ -69,8 +69,8 @@ const AboutPage = () => {
                   </svg>
                 </div>
               }
-              title="Service Commitment"
-              description="It is a long established fact that a reader will be distracted by the readable. It is a long established fact that a reader."
+              title="One-Stop Entertainment Booking Platform"
+              description="Instantly discover and book top DJs, singers, and dancers for any event—all in one place."
               bgColor="bg-blue-50"
             />
 
@@ -82,8 +82,8 @@ const AboutPage = () => {
                   </svg>
                 </div>
               }
-              title="Super Experience"
-              description="It is a long established fact that a reader will be distracted by the readable. It is a long established fact that a reader."
+              title="Real-Time Availability & Instant Booking"
+              description="View performer schedules and confirm bookings with just a few clicks—no back-and-forth."
               bgColor="bg-pink-50"
             />
 
@@ -95,8 +95,8 @@ const AboutPage = () => {
                   </svg>
                 </div>
               }
-              title="User Data Secure"
-              description="It is a long established fact that a reader will be distracted by the readable. It is a long established fact that a reader."
+              title="Verified Talent, Trusted Performances"
+              description="All performers are pre-screened and rated to ensure high-quality, professional entertainment."
               bgColor="bg-blue-50"
             />
 
@@ -108,8 +108,8 @@ const AboutPage = () => {
                   </svg>
                 </div>
               }
-              title="Fast Service"
-              description="It is a long established fact that a reader will be distracted by the readable. It is a long established fact that a reader."
+              title="Curated for Every Occasion"
+              description="From house parties and weddings to corporate functions and cultural events, GIGGILI has the right talent for every vibe."
               bgColor="bg-orange-50"
             />
 
@@ -121,8 +121,8 @@ const AboutPage = () => {
                   </svg>
                 </div>
               }
-              title="Secure Payment"
-              description="It is a long established fact that a reader will be distracted by the readable. It is a long established fact that a reader."
+              title="Transparent Pricing, No Surprises"
+              description="Know exactly what you’re paying for upfront—no hidden fees or last-minute charges."
               bgColor="bg-green-50"
             />
 
@@ -134,8 +134,8 @@ const AboutPage = () => {
                   </svg>
                 </div>
               }
-              title="Dedicated Support"
-              description="It is a long established fact that a reader will be distracted by the readable. It is a long established fact that a reader."
+              title="Reliable Support Team"
+              description="Dedicated event support to ensure everything runs smoothly—from booking to performance."
               bgColor="bg-purple-50"
             />
           </div>

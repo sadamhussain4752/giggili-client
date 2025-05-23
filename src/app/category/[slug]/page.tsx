@@ -94,7 +94,7 @@ export default function ServiceListPage({ params }: Props) {
                 d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
               />
             </svg>
-            {artist.location || 'Bangalore, India'}
+            {'Bangalore, India'}
           </p>
         </CardContent>
       </Card>

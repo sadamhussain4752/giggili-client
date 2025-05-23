@@ -52,18 +52,18 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link href="/service-list" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                <Link href="/category/28" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Service List
                 </Link>
               </li>
-              <li>
-                <Link href="/artist/register" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+              {/* <li>
+                <Link href="/category/28" className="text-sm text-muted-foreground hover:text-primary transition-colors">
                   Become an Artist
                 </Link>
-              </li>
+              </li> */}
               <li>
-                <Link href="/register" className="text-sm text-muted-foreground hover:text-primary transition-colors">
-                  Register
+                <Link href="/contact" className="text-sm text-muted-foreground hover:text-primary transition-colors">
+                  Contact
                 </Link>
               </li>
             </ul>
@@ -159,7 +159,7 @@ const Footer = () => {
 
             <div>
               <Image
-                src="https://ext.same-assets.com/1887355265/2372121646.png"
+                src={require("../../asset/images.png")}
                 alt="Cashfree Payments"
                 width={120}
                 height={30}
@@ -171,6 +171,14 @@ const Footer = () => {
 
       {/* WhatsApp Link */}
       <div className="fixed bottom-6 right-6 z-50">
+         <Link
+    href="tel:+918123382771"
+    className="bg-blue-500 text-white p-3 rounded-full flex items-center justify-center shadow-lg hover:bg-blue-700 transition-colors mb-2"
+  >
+    <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24" className="w-6 h-6">
+      <path d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.11-.21c1.21.49 2.53.76 3.88.76a1 1 0 011 1v3.5a1 1 0 01-1 1C10.39 21.23 2.77 13.61 2.77 4a1 1 0 011-1H7.5a1 1 0 011 1c0 1.35.27 2.67.76 3.88a1 1 0 01-.21 1.11l-2.2 2.2z" />
+    </svg>
+  </Link>
         <Link
           href="https://api.whatsapp.com/send?phone=918123382771&text=Hi"
           target="_blank"
