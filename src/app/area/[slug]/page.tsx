@@ -32,7 +32,7 @@ export default function ServiceListPage({ params }: Props) {
 
   const filteredData = useMemo(() => {
     if (!slug) return storelist; // No filter if slug is empty
-    return storelist?.filter((artist: any) => artist?.service_area_id === slug && artist.vip === "0" && artist.price !== "0" && artist.status === "1") || [];
+    return storelist?.filter((artist: any) => artist?.service_area_id === slug  && artist.price !== "0" && artist.status === "1") || [];
   }, [storelist, slug]);
 
   const paginatedData = useMemo(() => {

@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
 import { VerifyOTP, AddOrderProductById } from "@/reducer/thunks";
 import { useRouter } from "next/navigation";
-import { Modal, Result } from "antd";
+import { Modal, Result, Spin } from "antd";
 
 declare global {
   interface Window {
@@ -31,32 +31,52 @@ type Props = {
     slug: string;
   }>;
 };
+const soundSetups = [
+  {
+    label: "Sound Setup (50–100 guests)",
+    details: [
+      "2 Tops", "2 Single Subs", "Soundcraft 12-Channel Mixer – 1 No",
+      "Cordless Handheld Mics – 2 Nos", "Corded DJ Mic – 1 No",
+      "DJ Monitor – 1 No", "Speaker Stands – 2 Nos", "Transportation Included"
+    ],
+    price: 10000,
+  },
+  {
+    label: "Sound Setup (150–200 guests)",
+    details: [
+      "JBL VRX Tops – 4 Nos", "JBL STX Subs – 2 Nos", "Crown Amps – 2 Nos",
+      "Soundcraft 12-Channel Mixer – 1 No", "Cordless Handheld Mics – 2 Nos",
+      "Corded DJ Mic – 1 No", "DJ Monitor – 1 No", "Speaker Stands – 2 Nos"
+    ],
+    price: 12500,
+  },
+];
+
 
 const CheckoutPage = ({ params }: Props) => {
   const router = useRouter();
   const [country, setCountry] = useState('India');
   const [city, setCity] = useState('Bangalore');
   const [area, setArea] = useState('');
+  const [additionalServicePrice, setadditionalServicePrice] = useState(0);
+
   const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
-    const location = localStorage.getItem("location") || "{}"
+  const location = localStorage.getItem("location") || "";
+  const [selectedSoundSetup, setSelectedSoundSetup] = useState<any | null>(null);
 
   const entries = Object.entries(storedData);
   const [OrderId, setOrderId] = useState(false);
 
   const INITIAL_VISIBLE = 4; // number of items to show initially
   const [showAll, setShowAll] = useState(false);
-    const [ViewMore, setViewMore] = useState(false);
+  const [ViewMore, setViewMore] = useState(false);
 
 
   const visibleEntries = showAll ? entries : entries.slice(0, INITIAL_VISIBLE); const [coupon, setCoupon] = useState('');
 
   const { slug } = use(params);
   const dispatch = useDispatch<any>();
-  // inside your CheckoutPage component
-  const [bookingCategory, setBookingCategory] = useState("");
-  const [formErrors, setFormErrors] = useState<{ bookingCategory?: string }>(
-    {}
-  );
+
   const {
     register,
     handleSubmit,
@@ -97,7 +117,7 @@ const CheckoutPage = ({ params }: Props) => {
         name: getUserResponse.User.name || "",
         email: getUserResponse.User.email || "",
         phone: getUserResponse.User.phone || "",
-        address: location || getUserResponse.User.address ,
+        address: location || getUserResponse.User.address,
         postCode: getUserResponse.User.post_code || "",
         bookingCategory: "", // you can set a default here if you want
       });
@@ -127,8 +147,10 @@ const CheckoutPage = ({ params }: Props) => {
     );
 
   const sessionPrice = Number(artist?.price) || 0;
-  const additionalServicePrice = 0;
-  const subtotal = sessionPrice + additionalServicePrice;
+  const selectedSoundPrice = selectedSoundSetup !== null && soundSetups[selectedSoundSetup]
+    ? soundSetups[selectedSoundSetup].price
+    : 0;
+  const subtotal = sessionPrice + additionalServicePrice + selectedSoundPrice;
   const tax = parseFloat((subtotal * 0.18).toFixed(2));
   const total = parseFloat((subtotal + tax).toFixed(2));
   const handlePayment = async (data: FormData) => {
@@ -169,7 +191,7 @@ const CheckoutPage = ({ params }: Props) => {
             date: new Date().toDateString(),
             schedule: '10:00Am - 02:00PM',
             package_fee: artist?.price,
-            extra_service: '0',
+            extra_service: soundSetups[selectedSoundSetup]?.price || '0',
             sub_total: subtotal.toFixed(0),
             tax: tax.toFixed(0),
             total: total.toFixed(0),
@@ -208,6 +230,9 @@ const CheckoutPage = ({ params }: Props) => {
       alert(err.message || "Something went wrong during payment.");
     }
   };
+  if (loadinglist) return <Spin tip="Loading Services..." />;
+  if (error) return <Result status="error" title="Failed to load services" subTitle={error} />;
+
   return (
     <div className="min-h-screen bg-white py-10 px-6 md:px-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
@@ -324,7 +349,7 @@ const CheckoutPage = ({ params }: Props) => {
                 )}
               </div>
             </div>
-           
+
             <div>
               <label className="block text-sm font-medium mb-1">
                 Your Address
@@ -341,12 +366,33 @@ const CheckoutPage = ({ params }: Props) => {
                 {...register("orderNote")}
               ></textarea>
             </div>
+            <div>
+              <div>
+                <label className="block text-sm font-medium mb-1">Add On More Sound Setup (Optional)</label>
+                <select
+                  value={selectedSoundSetup ?? ""}
+                  onChange={(e) => setSelectedSoundSetup(e.target.value ? parseInt(e.target.value) : null)}
+                  className="w-full border px-4 py-2 rounded-md"
+                >
+                  <option value="">Select Sound Setup</option>
+                  {soundSetups.map((setup, index) => (
+                    <option key={index} value={index}>
+                      {setup.label} - ₹{setup.price}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+
+
+            </div>
+
 
             {/* Submit Button */}
             {getUserResponse && getUserResponse.User ? (
               <Button
                 type="submit"
-                className="mt-6 w-full bg-green-600 hover:bg-green-700 text-white"
+                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
               >
                 Book Now
               </Button>
@@ -385,20 +431,20 @@ const CheckoutPage = ({ params }: Props) => {
                 {artist.facilities.join(', ')}
               </p>
 
-             
 
-               
+
+
             </div>
             <div
-                className="text-blue-600 flex items-center space-x-2"
-                onClick={()=>{
-                  setViewMore(!ViewMore)
-                }}
-              >
-                <span>{!ViewMore ? "Read More" :"View Less"}</span>
-              </div>
+              className="text-blue-600 flex items-center space-x-2"
+              onClick={() => {
+                setViewMore(!ViewMore)
+              }}
+            >
+              <span>{!ViewMore ? "Read More" : "View Less"}</span>
+            </div>
           </div>
-          
+
           <div className="mt-6 space-y-2">
             {ViewMore && Object.entries(storedData).map(([key, value], index) => (
               <div key={index} className="flex justify-between py-1 text-sm">
@@ -406,7 +452,7 @@ const CheckoutPage = ({ params }: Props) => {
                 <span className="text-gray-900 font-normal truncate max-w-[60%] text-right">{value}</span>
               </div>
             ))}
-            
+
           </div>
 
           <div className="flex justify-between py-2 border-t text-sm">
@@ -418,6 +464,25 @@ const CheckoutPage = ({ params }: Props) => {
             <span>Lighting Setup</span>
             <span>₹{additionalServicePrice.toFixed(2)}</span>
           </div>
+          <div className="flex justify-between py-2 text-sm">
+
+            <span>{selectedSoundSetup !== null && (
+              <div className="mt-2 text-sm text-gray-600">
+                <span>Add More Setup</span>
+
+                <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].label.toLocaleString()}</p>
+
+                <ul className="list-disc ml-5">
+                  {soundSetups[selectedSoundSetup].details.map((item, i) => (
+                    <li key={i}>{item}</li>
+                  ))}
+                </ul>
+                <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].price.toLocaleString()}</p>
+              </div>
+            )}
+            </span>
+          </div>
+
 
           <div className="flex justify-between py-2 text-sm border-t">
             <span>Subtotal</span>
@@ -445,40 +510,40 @@ const CheckoutPage = ({ params }: Props) => {
 
         </div>
       </div>
-     <Modal
-      visible={OrderId}
-      onCancel={() => {
-        window.history.back(); // Go back on modal cancel
-      }}
-      width="770px"
-      style={{ marginTop: "2%" }}
-      footer={null}
-    >
-      <Result
-        status="success"
-        title="DJ Booking Confirmed"
-        subTitle={`Thank you! Your DJ booking has been successfully confirmed. Booking ID: ${OrderId}. Our team will reach out to you shortly with further details.`}
-        extra={[
-          <Button
-            onClick={() => {
-              window.location.href = '/';  // Redirect to Home page
-            }}
-            type="primary"
-            key="viewBooking"
-          >
-            Home
-          </Button>,
-          <Button
-            key="newBooking"
-            onClick={() => {
-              window.history.back(); // Go back to previous page
-            }}
-          >
-            Go Back
-          </Button>,
-        ]}
-      />
-    </Modal>
+      <Modal
+        visible={OrderId}
+        onCancel={() => {
+          window.history.back(); // Go back on modal cancel
+        }}
+        width="770px"
+        style={{ marginTop: "2%" }}
+        footer={null}
+      >
+        <Result
+          status="success"
+          title="DJ Booking Confirmed"
+          subTitle={`Thank you! Your DJ booking has been successfully confirmed. Booking ID: ${OrderId}. Our team will reach out to you shortly with further details.`}
+          extra={[
+            <Button
+              onClick={() => {
+                window.location.href = '/';  // Redirect to Home page
+              }}
+              type="primary"
+              key="viewBooking"
+            >
+              Home
+            </Button>,
+            <Button
+              key="newBooking"
+              onClick={() => {
+                window.history.back(); // Go back to previous page
+              }}
+            >
+              Go Back
+            </Button>,
+          ]}
+        />
+      </Modal>
     </div>
   );
 };

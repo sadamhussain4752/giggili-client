@@ -14,14 +14,28 @@ type Props = {
     slug: string;
   }>;
 };
-
+const question = {
+  title: "What standard of service are you looking for?",
+  options: [
+    "I want a premium service",
+    "Quality and budget are equally important",
+    "Budget is my primary concern",
+    "Other",
+  ],
+};
 export default function ServiceListPage({ params }: Props) {
   const { slug } = use(params); // Unwrapping Promise from App Router
   console.log(slug, "slug");
 
   const dispatch = useDispatch<any>();
   const [currentPage, setCurrentPage] = useState(1);
-  const [selectedGenre, setSelectedGenre] = useState<string | null>(null);
+  const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
+  console.log(storedData,"storedData");
+  const selectedAnswer = storedData[question.title];
+const selectedIndex = question.options.findIndex(option => option === selectedAnswer);
+
+console.log("Selected Index:", selectedIndex + 1); // 👉 will print 1
+  
   const itemsPerPage = 8;
 
   useEffect(() => {
@@ -32,7 +46,7 @@ export default function ServiceListPage({ params }: Props) {
 
   const filteredData = useMemo(() => {
     if (!slug) return storelist; // No filter if slug is empty
-    return storelist?.filter((artist: any) => artist?.category_id === slug && artist.vip === "0" && artist.price !== "0" && artist.status === "1") || [];
+    return storelist?.filter((artist: any) => artist?.category_id === slug && artist.price !== "0" && artist.status === "1" && artist.service_type === String(selectedIndex + 1)) || [];
   }, [storelist, slug]);
 
   const paginatedData = useMemo(() => {

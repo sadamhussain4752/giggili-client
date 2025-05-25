@@ -66,7 +66,7 @@ const TrendingArtists = () => {
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {storelist?.filter((i: any) => i.vip === "0" && i.price !== "0" && i.status === "1").slice(0, 8).map((artist: any) => (
+        {storelist?.filter((i: any) =>  i.price !== "0" && i.status === "1").slice(0, 8).map((artist: any) => (
             <ArtistCard key={artist.id} artist={artist} />
           ))}
         </div>
