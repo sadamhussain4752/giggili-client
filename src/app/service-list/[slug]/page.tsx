@@ -105,9 +105,11 @@ export default function ArtistDetailPage({ params }: Props) {
                   <p className="mb-4">
                     {/* Location: {artist.location} */}
                   </p>
-                  <div className="font-bold text-xl mb-2">₹{artist.price}</div>
+                  {artist.request_call !== "true" ?                   <div className="font-bold text-xl mb-2">₹{artist.price}</div>
+ :                 ""
+}
                   <Link href={`/checkout/${artist._id}`}>
-                    <Button className="w-full">Book Now</Button>
+                    <Button className="w-full">{artist.request_call !== "true" ? "Book Now" :"Brief us"} </Button>
                   </Link>
                   <p className="text-xs text-orange-500 mt-2">Filling Fast</p>
                 </CardContent>

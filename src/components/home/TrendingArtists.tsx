@@ -90,7 +90,7 @@ const TrendingArtists = () => {
   );
 };
 
-const ArtistCard = ({ artist }: { artist: typeof TRENDING_ARTISTS[number] }) => {
+const ArtistCard = ({ artist }: { artist: any }) => {
   return (
     <Link key={artist.id} href={`/service-list/${artist._id}`} aria-label={`View ${artist.name}`}>
     <Card className="overflow-hidden hover:shadow-md transition-shadow h-full">
@@ -106,9 +106,10 @@ const ArtistCard = ({ artist }: { artist: typeof TRENDING_ARTISTS[number] }) => 
             Giggili Certified
           </div>
         )}
-        <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
-          ₹{artist.price || 'N/A'}
-        </div>
+        {artist.request_call !== "true" &&  <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
+          ₹{ artist.price || 'N/A'}
+        </div>}
+       
       </div>
       <CardContent className="p-4">
         <h3 className="font-bold text-lg text-foreground mb-1">{artist.title}</h3>

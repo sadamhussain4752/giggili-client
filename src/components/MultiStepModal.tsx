@@ -115,9 +115,10 @@ const stepFields: StepField[] = [
 interface Props {
   isOpen: boolean;
   onClose: () => void;
+  bookingview: String;
 }
 
-const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
+const MultiStepModal: React.FC<Props> = ({ isOpen, onClose ,bookingview}) => {
   const [selectedValues, setSelectedValues] = useState<{
     [title: string]: string | string[];
   }>({});
@@ -137,18 +138,30 @@ const MultiStepModal: React.FC<Props> = ({ isOpen, onClose }) => {
     }));
   };
 
-  const handleFinish = () => {
-    const finalData = { ...selectedValues };
-    Object.entries(otherInputs).forEach(([key, val]) => {
-      if (Array.isArray(finalData[key])) {
-        finalData[key] = [...(finalData[key] as string[]).filter((v) => v !== "Other"), val];
-      } else if (finalData[key] === "Other") {
-        finalData[key] = val;
-      }
-    });
-    localStorage.setItem("djFormResponses", JSON.stringify(finalData));
-    onClose();
-  };
+const handleFinish = () => {
+  const finalData = { ...selectedValues };
+
+  Object.entries(otherInputs).forEach(([key, val]) => {
+    if (Array.isArray(finalData[key])) {
+      finalData[key] = [
+        ...(finalData[key] as string[]).filter((v) => v !== "Other"),
+        val.toString(),
+      ];
+    } else if (finalData[key] === "Other") {
+      finalData[key] = val.toString();
+    }
+  });
+
+  finalData["Booking Type"] = bookingview;
+
+  // const existingData = JSON.parse(localStorage.getItem("djFormResponses") || "[]");
+  // existingData.push(finalData);
+  localStorage.setItem("djFormResponses", JSON.stringify(finalData));
+
+  onClose();
+};
+
+
 
   return (
     <Dialog open={isOpen} onClose={onClose} className="fixed z-50 inset-0 overflow-y-auto">

@@ -63,6 +63,7 @@ const CheckoutPage = ({ params }: Props) => {
   const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
   const location = localStorage.getItem("location") || "";
   const [selectedSoundSetup, setSelectedSoundSetup] = useState<any | null>(null);
+  localStorage.removeItem("checkoutid")
 
   const entries = Object.entries(storedData);
   const [OrderId, setOrderId] = useState(false);
@@ -271,6 +272,7 @@ const CheckoutPage = ({ params }: Props) => {
                 type="button"
                 className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
                 onClick={() => {
+                  localStorage.setItem("checkoutid",slug)
                   alert("Please login to proceed with the booking.");
                   router.push("/login"); // Navigate to /login
 
@@ -389,27 +391,40 @@ const CheckoutPage = ({ params }: Props) => {
 
 
             {/* Submit Button */}
+
             {getUserResponse && getUserResponse.User ? (
-              <Button
-                type="submit"
-                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
-              >
-                Book Now
-              </Button>
+  artist.request_call === "true" ? (
+    <div className="flex flex-col gap-2">
+     
+      <a
+        href="tel:+918123382771"
+        className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4 text-white w-fit px-4 py-2 rounded"
+      >
+        Request Call Back
+      </a>
+    </div>
+  ) : (
+    <Button
+      type="submit"
+      className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+    >
+      Book Now
+    </Button>
+  )
+) : (
+  <Button
+    type="button"
+    className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+    onClick={() => {
+      alert("Please login to proceed with the booking.");
+      router.push("/login");
+    }}
+  >
+    Sign In
+  </Button>
+)}
 
-            ) : (
-              <Button
-                type="button"
-                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
-                onClick={() => {
-                  alert("Please login to proceed with the booking.");
-                  router.push("/login"); // Navigate to /login
-
-                }}
-              >
-                Sign In
-              </Button>
-            )}</>}
+           </>}
 
 
         </form>
@@ -455,7 +470,8 @@ const CheckoutPage = ({ params }: Props) => {
 
           </div>
 
-          <div className="flex justify-between py-2 border-t text-sm">
+          {artist.request_call === "true" ? null : <>
+           <div className="flex justify-between py-2 border-t text-sm">
             <span>90 minutes session</span>
             <span>₹{sessionPrice.toFixed(2)}</span>
           </div>
@@ -497,7 +513,9 @@ const CheckoutPage = ({ params }: Props) => {
           <div className="flex justify-between py-3 font-bold text-lg border-t mt-2">
             <span>Total</span>
             <span>₹{total.toFixed(2)}</span>
-          </div>
+          </div></>}
+
+         
 
           <div className="flex mt-4 gap-2">
             <Input placeholder="Enter Coupon Code" />

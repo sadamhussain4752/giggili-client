@@ -14,6 +14,7 @@ const Hero = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [bookingview, setBookingView] = useState('');
 
   return (
     <section className="w-full bg-[#FFF9F3] py-12">
@@ -68,16 +69,16 @@ const Hero = () => {
 
         {/* Right Side - Image Grid */}
         <div className="columns-1 sm:columns-2 gap-4">
-          <ImageCard src={require("../../asset/Rectangle 1.png")} size={true} />
+          <ImageCard src={require("../../asset/Homebanner1.jpg")} size={true} />
           <ImageCard
-            src={require("../../asset/Rectangle 2.png")}
+            src={require("../../asset/Homebanner3.jpg")}
             size={false}
           />
           <ImageCard
-            src={require("../../asset/Rectangle 4.png")}
+            src={require("../../asset/Homebanner22.jpg")}
             size={false}
           />
-          <ImageCard src={require("../../asset/Rectangle 3.png")} size={true} />
+          <ImageCard src={require("../../asset/Homebanner4.png")} size={true} />
         </div>
       </div>
       {showModal && (
@@ -107,7 +108,9 @@ const Hero = () => {
                     alt="Express"
                     width={40}
                     height={40}
-                    onClick={() => setIsModalOpen(true)}
+                    onClick={() => {
+                      setBookingView("Express Booking"),
+                      setIsModalOpen(true)}}
                   />
                   <span className="mt-2 text-sm font-medium">
                     Express Booking
@@ -121,7 +124,9 @@ const Hero = () => {
                     alt="Regular"
                     width={40}
                     height={40}
-                     onClick={() => setIsModalOpen(true)}
+                      onClick={() => {
+                      setBookingView("Regular Booking"),
+                      setIsModalOpen(true)}}
                   />
                   <span className="mt-2 text-sm font-medium">
                     Regular Booking
@@ -135,6 +140,7 @@ const Hero = () => {
 
       <MultiStepModal
         isOpen={isModalOpen}
+        bookingview={bookingview}
         onClose={() => {
           setIsModalOpen(false);
           router.push("/category/28");

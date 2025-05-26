@@ -32,6 +32,10 @@ export default function ServiceListPage({ params }: Props) {
   const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
   console.log(storedData,"storedData");
   const selectedAnswer = storedData[question.title];
+    const bookingtype = storedData["Booking Type"];
+    console.log(bookingtype,"bookingtype");
+    
+
 const selectedIndex = question.options.findIndex(option => option === selectedAnswer);
 
 console.log("Selected Index:", selectedIndex + 1); // 👉 will print 1
@@ -44,10 +48,22 @@ console.log("Selected Index:", selectedIndex + 1); // 👉 will print 1
 
   const { storelist, loading, error } = useSelector((state: any) => state.storelist);
 
-  const filteredData = useMemo(() => {
-    if (!slug) return storelist; // No filter if slug is empty
-    return storelist?.filter((artist: any) => artist?.category_id === slug && artist.price !== "0" && artist.status === "1" && artist.service_type === String(selectedIndex + 1)) || [];
-  }, [storelist, slug]);
+ const filteredData = useMemo(() => {
+  if (!slug) return storelist;
+
+  return storelist?.filter((artist: any) => {
+    const isCategoryMatch = artist?.category_id === slug;
+    const isPriceValid = artist.price !== "0";
+    const isStatusActive = artist.status === "1";
+    const isServiceTypeMatch =
+      bookingtype === "Express Booking"
+        ? artist.service_type === String(selectedIndex + 1)
+        : true; // Allow all service types if not "Express Booking"
+
+    return isCategoryMatch && isPriceValid && isStatusActive && isServiceTypeMatch;
+  }) || [];
+}, [storelist, slug, bookingtype, selectedIndex]);
+
 
   const paginatedData = useMemo(() => {
     const startIndex = (currentPage - 1) * itemsPerPage;
