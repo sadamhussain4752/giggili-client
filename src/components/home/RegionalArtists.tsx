@@ -47,7 +47,7 @@ const RegionalArtists = () => {
               </div>
 
               <CenteredBanner
-                src={require(`../../asset/banners${index + 1}.png`)}
+                src={require(`../../asset/areabanner${index + 1}.jpg`)}
               />
             </div>
           ))}

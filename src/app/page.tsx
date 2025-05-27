@@ -21,8 +21,9 @@ export default function Home() {
     <>
       <Hero />
       {/* <PerformerSlider /> */}
+      
       <TrendingArtists />
-      <CenteredBanner src={require("../asset/banners3.png")} />
+      <CenteredBanner src={require("../asset/areabanner.jpg")} />
       <RegionalArtists />
     </>
   );

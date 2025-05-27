@@ -7,44 +7,7 @@ import { ChevronRight } from 'lucide-react';
 import { fetchStoreData } from '@/reducer/thunks'; // Adjust path if needed
 
 import { useDispatch, useSelector } from "react-redux";
-const TRENDING_ARTISTS = [
-  {
-    id: 1,
-    name: 'Nayab The Band',
-    genres: ['Bollywood and Punjabi', 'Retro'],
-    location: 'Bangalore, India',
-    price: '₹0.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-    slug: 'nayab-the-band'
-  },
-  {
-    id: 2,
-    name: 'Dj Basavaraj',
-    genres: ['Bollywood and Punjabi', 'English commercial', 'Retro'],
-    location: 'Bangalore, India',
-    price: '₹0.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-    slug: 'dj-basavaraj'
-  },
-  {
-    id: 3,
-    name: 'Testsadas',
-    genres: ['Bollywood and Punjabi', 'House and Techno', 'English commercial'],
-    location: 'Bangalore, India',
-    price: '₹4,999.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-    slug: 'testsadas'
-  },
-  {
-    id: 4,
-    name: 'DJ Saurabh',
-    genres: ['Bollywood and Punjabi', 'House and Techno', 'English commercial', 'Hip Hop & RnB'],
-    location: 'Bangalore, India',
-    price: '₹0.00',
-    imageUrl: 'https://ext.same-assets.com/1887355265/1137231418.jpeg',
-    slug: 'dj-saurabh'
-  }
-];
+
 
 const TrendingArtists = () => {
   const dispatch = useDispatch<any>();
