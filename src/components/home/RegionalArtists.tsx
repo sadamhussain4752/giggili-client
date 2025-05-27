@@ -68,9 +68,9 @@ const ArtistCard = ({ artist }: { artist: any }) => {
             className="object-cover"
             loading="lazy" // <-- this is optional in Next.js (defaults to lazy)
           />
-          <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
+         {artist.request_call !== "true" && <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
             ₹ {artist.price}
-          </div>
+          </div>} 
         </div>
         <CardContent className="p-4">
           <h3 className="font-semibold text-lg text-foreground mb-1">

@@ -122,7 +122,7 @@ const Footer = () => {
               <Link href="https://www.instagram.com/giggili_?igsh=cDMyazRkbXJkaXRt" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Instagram className="w-5 h-5" />
               </Link>
-              <Link href="https://x.com/search?q=Giggili&src=typed_query" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
+              <Link href="https://x.com/i/flow/login?redirect_after_login=%2FGiggili238160" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">
                 <Twitter className="w-5 h-5" />
               </Link>
               <Link href="https://www.linkedin.com/company/giggili/about/?viewAsMember=true" target="_blank" rel="noopener noreferrer" className="text-muted-foreground hover:text-primary">

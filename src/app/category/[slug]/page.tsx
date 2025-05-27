@@ -93,9 +93,9 @@ console.log("Selected Index:", selectedIndex + 1); // 👉 will print 1
               Giggili Certified
             </div>
           )}
-          <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
+         {artist.request_call !== "true" && <div className="absolute bottom-2 left-2 bg-white px-2 py-1 text-xs rounded shadow-sm">
             ₹{artist.price || 'N/A'}
-          </div>
+          </div>} 
         </div>
         <CardContent className="p-4">
           <h3 className="font-bold text-lg text-foreground mb-1">{artist.title}</h3>
