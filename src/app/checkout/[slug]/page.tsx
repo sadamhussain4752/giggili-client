@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { useForm } from "react-hook-form";
-import { VerifyOTP, AddOrderProductById } from "@/reducer/thunks";
+import { VerifyOTP, AddOrderProductById, ApplyCouponFetch } from "@/reducer/thunks";
 import { useRouter } from "next/navigation";
 import { Modal, Result, Spin } from "antd";
 
@@ -58,22 +58,20 @@ const CheckoutPage = ({ params }: Props) => {
   const [country, setCountry] = useState('India');
   const [city, setCity] = useState('Bangalore');
   const [area, setArea] = useState('');
+  const [couponNumber, SetCoupon] = useState("");
+  const [couponValue, SetCouponValue] = useState(0);
+  const [couponType, SetCouponType] = useState<"amount" | "percentage" | "bogo" | null>(null);
   const [additionalServicePrice, setadditionalServicePrice] = useState(0);
 
   const storedData = JSON.parse(localStorage.getItem("djFormResponses") || "{}");
   const location = localStorage.getItem("location") || "";
   const [selectedSoundSetup, setSelectedSoundSetup] = useState<any | null>(null);
-  localStorage.removeItem("checkoutid")
 
-  const entries = Object.entries(storedData);
   const [OrderId, setOrderId] = useState(false);
 
-  const INITIAL_VISIBLE = 4; // number of items to show initially
-  const [showAll, setShowAll] = useState(false);
   const [ViewMore, setViewMore] = useState(false);
 
 
-  const visibleEntries = showAll ? entries : entries.slice(0, INITIAL_VISIBLE); const [coupon, setCoupon] = useState('');
 
   const { slug } = use(params);
   const dispatch = useDispatch<any>();
@@ -100,6 +98,9 @@ const CheckoutPage = ({ params }: Props) => {
     error,
   } = useSelector((state: any) => state.servicelist);
 
+  const { CouponRes: CouponResponse } = useSelector((state: any) => state.CouponRes);
+
+
   useEffect(() => {
     if (slug) {
       (async () => {
@@ -124,6 +125,35 @@ const CheckoutPage = ({ params }: Props) => {
       });
     }
   }, [getUserResponse, reset]);
+
+
+  useEffect(() => {
+    if (CouponResponse?.success) {
+      alert("Coupon applied successfully");
+
+      const { bodysend } = CouponResponse;
+
+      if (bodysend) {
+        const { coupon_type, discount } = bodysend;
+
+        SetCouponValue(discount);
+        SetCouponType(coupon_type);
+      } else {
+        // Handle case where bodysend is undefined or null
+        // alert("Invalid coupon response: bodysend is missing");
+
+      }
+    } else if (typeof CouponResponse === "string") {
+      alert(CouponResponse);
+
+    } else {
+      // Handle other types of CouponResponse that are not valid
+      // alert("Invalid CouponResponse: " + CouponResponse);
+    }
+  }, [CouponResponse]);
+  useEffect(() => {
+    localStorage.removeItem("checkoutid");
+  }, []);
 
 
   const loadRazorpayScript = () => {
@@ -163,9 +193,9 @@ const CheckoutPage = ({ params }: Props) => {
         alert("Invalid amount. Please try again later.");
         return;
       }
-
+      //rzp_test_SXk7LZqsBPpAkj
       const options = {
-        key: "rzp_test_SXk7LZqsBPpAkj", // Replace with your live key
+        key: "rzp_live_nZkHyJLffFhCWw", // Replace with your live key
         amount: finalAmount,
         currency: "INR",
         name: artist.title || "DJ Booking",
@@ -195,13 +225,13 @@ const CheckoutPage = ({ params }: Props) => {
             extra_service: soundSetups[selectedSoundSetup]?.price || '0',
             sub_total: subtotal.toFixed(0),
             tax: tax.toFixed(0),
-            total: total.toFixed(0),
-            coupon_code: coupon,
+            total: (total - calculateDiscount(total)).toFixed(2),
+            coupon_code: calculateDiscount(total),
             coupon_type: '',
             coupon_amount: '0',
             commission_type: 'percentage',
             commission_charge: '10',
-            commission_amount: '400',
+            commission_amount: (total * 0.10).toFixed(0),
             payment_gateway: 'razorpay',
             payment_status: 'paid',
             status: '1',
@@ -231,6 +261,36 @@ const CheckoutPage = ({ params }: Props) => {
       alert(err.message || "Something went wrong during payment.");
     }
   };
+
+const handleCoupon = () => {
+  const bodyData = {
+    couponCode: couponNumber,
+    userId: getUserResponse.User._id,
+  };
+  dispatch(ApplyCouponFetch(bodyData));
+};
+
+const calculateDiscount = (total: number): number => {
+  const value = Number(couponValue);
+  if (isNaN(value)) return 0;
+
+  switch (couponType) {
+    case "amount":
+      return value;
+    case "percentage":
+      return (value / 100) * total;
+    case "bogo":
+      return total / 2;
+    default:
+      return 0;
+  }
+};
+
+const renderDiscount = () => {
+  const discount = calculateDiscount(total);
+  return <span className="text-black">{`${discount.toFixed(2)}`}</span>;
+};
+
   if (loadinglist) return <Spin tip="Loading Services..." />;
   if (error) return <Result status="error" title="Failed to load services" subTitle={error} />;
 
@@ -272,7 +332,7 @@ const CheckoutPage = ({ params }: Props) => {
                 type="button"
                 className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
                 onClick={() => {
-                  localStorage.setItem("checkoutid",slug)
+                  localStorage.setItem("checkoutid", slug)
                   alert("Please login to proceed with the booking.");
                   router.push("/login"); // Navigate to /login
 
@@ -393,38 +453,38 @@ const CheckoutPage = ({ params }: Props) => {
             {/* Submit Button */}
 
             {getUserResponse && getUserResponse.User ? (
-  artist.request_call === "true" ? (
-    <div className="flex flex-col gap-2">
-     
-      <a
-        href="tel:+918123382771"
-        className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4 text-white w-fit px-4 py-2 rounded"
-      >
-        Request Call Back
-      </a>
-    </div>
-  ) : (
-    <Button
-      type="submit"
-      className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
-    >
-      Book Now
-    </Button>
-  )
-) : (
-  <Button
-    type="button"
-    className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
-    onClick={() => {
-      alert("Please login to proceed with the booking.");
-      router.push("/login");
-    }}
-  >
-    Sign In
-  </Button>
-)}
+              artist.request_call === "true" ? (
+                <div className="flex flex-col gap-2">
 
-           </>}
+                  <a
+                    href="tel:+918123382771"
+                    className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4 text-white w-fit px-4 py-2 rounded"
+                  >
+                    Request Call Back
+                  </a>
+                </div>
+              ) : (
+                <Button
+                  type="submit"
+                  className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+                >
+                  Book Now
+                </Button>
+              )
+            ) : (
+              <Button
+                type="button"
+                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+                onClick={() => {
+                  alert("Please login to proceed with the booking.");
+                  router.push("/login");
+                }}
+              >
+                Sign In
+              </Button>
+            )}
+
+          </>}
 
 
         </form>
@@ -471,55 +531,61 @@ const CheckoutPage = ({ params }: Props) => {
           </div>
 
           {artist.request_call === "true" ? null : <>
-           <div className="flex justify-between py-2 border-t text-sm">
-            <span>90 minutes session</span>
-            <span>₹{sessionPrice.toFixed(2)}</span>
-          </div>
+            <div className="flex justify-between py-2 border-t text-sm">
+              <span>90 minutes session</span>
+              <span>₹{sessionPrice.toFixed(2)}</span>
+            </div>
 
-          <div className="flex justify-between py-2 text-sm">
-            <span>Lighting Setup</span>
-            <span>₹{additionalServicePrice.toFixed(2)}</span>
-          </div>
-          <div className="flex justify-between py-2 text-sm">
+            <div className="flex justify-between py-2 text-sm">
+              <span>Lighting Setup</span>
+              <span>₹{additionalServicePrice.toFixed(2)}</span>
+            </div>
+            <div className="flex justify-between py-2 text-sm">
 
-            <span>{selectedSoundSetup !== null && (
-              <div className="mt-2 text-sm text-gray-600">
-                <span>Add More Setup</span>
+              <span>{selectedSoundSetup !== null && (
+                <div className="mt-2 text-sm text-gray-600">
+                  <span>Add More Setup</span>
 
-                <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].label.toLocaleString()}</p>
+                  <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].label.toLocaleString()}</p>
 
-                <ul className="list-disc ml-5">
-                  {soundSetups[selectedSoundSetup].details.map((item, i) => (
-                    <li key={i}>{item}</li>
-                  ))}
-                </ul>
-                <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].price.toLocaleString()}</p>
-              </div>
-            )}
-            </span>
-          </div>
+                  <ul className="list-disc ml-5">
+                    {soundSetups[selectedSoundSetup].details.map((item, i) => (
+                      <li key={i}>{item}</li>
+                    ))}
+                  </ul>
+                  <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].price.toLocaleString()}</p>
+                </div>
+              )}
+              </span>
+            </div>
 
 
-          <div className="flex justify-between py-2 text-sm border-t">
-            <span>Subtotal</span>
-            <span>₹{subtotal.toFixed(2)}</span>
-          </div>
+            <div className="flex justify-between py-2 text-sm border-t">
+              <span>Subtotal</span>
+              <span>₹{subtotal.toFixed(2)}</span>
+            </div>
 
-          <div className="flex justify-between py-2 text-sm">
-            <span>Tax (18%)</span>
-            <span>₹{tax.toFixed(2)}</span>
-          </div>
+            <div className="flex justify-between py-2 text-sm border-t">
+              <span>Discount</span>
+              <span>-₹{renderDiscount()}</span>
+            </div>
 
-          <div className="flex justify-between py-3 font-bold text-lg border-t mt-2">
-            <span>Total</span>
-            <span>₹{total.toFixed(2)}</span>
-          </div></>}
+            <div className="flex justify-between py-2 text-sm">
+              <span>Tax (18%)</span>
+              <span>₹{tax.toFixed(2)}</span>
+            </div>
 
-         
+
+            <div className="flex justify-between py-3 font-bold text-lg border-t mt-2">
+              <span>Total</span>
+            <span>₹{(total - calculateDiscount(total)).toFixed(2)}</span>
+            </div></>}
+
+
 
           <div className="flex mt-4 gap-2">
-            <Input placeholder="Enter Coupon Code" />
-            <Button className="bg-orange-500 text-white hover:bg-orange-600">
+            <Input placeholder="Enter Coupon Code" onChange={(e) => SetCoupon(e.target.value)} />
+            <Button className="bg-orange-500 text-white hover:bg-orange-600" onClick={handleCoupon}>
               Apply
             </Button>
           </div>
