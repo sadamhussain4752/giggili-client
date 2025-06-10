@@ -11,6 +11,8 @@ export default{
     //baseUrl: "http://ec2-13-48-245-166.eu-north-1.compute.amazonaws.com:5000/", //=>aws test mode prod
 //    baseUrl:"https://dev.birlaadvaya.xyz/" //=> prod 
   baseUrl:"https://apis.giggili.in/"
+      // baseUrl: "http://192.168.1.7:4000/",
+
   // baseUrl:"https://apisjobs.ourapi.co.in/",   
     // baseUrl: "http://192.168.31.50:4000/",
 

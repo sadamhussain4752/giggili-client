@@ -1,20 +1,33 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image, { StaticImageData } from "next/image";
 import Link from "next/link";
 import { motion } from "framer-motion";
 import MultiStepModal from "../MultiStepModal";
 import { useRouter } from "next/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProductData, ProductUserById } from "@/reducer/thunks";
 
 interface ImageCardProps {
   src: StaticImageData;
   size: boolean;
 }
+
 const Hero = () => {
-  const router = useRouter(); // use `useRouter()` from next/router
+  const router = useRouter();
+  const dispatch = useDispatch<any>();
+
+  useEffect(() => {
+    dispatch(ProductUserById());
+  }, [dispatch]);
+
+  const { GetProductId, loading, error } = useSelector(
+    (state: any) => state.GetProductId
+  );
+  console.log("GetProductId", GetProductId);
 
   const [showModal, setShowModal] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [bookingview, setBookingView] = useState('');
+  const [bookingview, setBookingView] = useState("");
 
   return (
     <section className="w-full bg-[#FFF9F3] py-12">
@@ -31,56 +44,34 @@ const Hero = () => {
               What are you looking for?
             </h3>
             <div className="grid grid-cols-3 gap-4">
-              <CategoryCard
-                title="DJ"
-                iconSrc="https://ext.same-assets.com/1887355265/2244096686.png"
-                href="#"
-                onClick={() => setShowModal(true)}
-              />
+              {GetProductId?.categories?.map((cat: any, index: number) => {
+                const isFirst = index === 0;
 
-              <CategoryCard
-                title="Live Singer"
-                iconSrc="https://ext.same-assets.com/1887355265/108643548.png"
-                href="/category/29"
-              />
-              <CategoryCard
-                title="Band"
-                iconSrc="https://ext.same-assets.com/1887355265/1389202622.png"
-                href="/category/30"
-              />
-              <CategoryCard
-                title="Musician"
-                iconSrc="https://ext.same-assets.com/1887355265/2072431407.png"
-                href="/category/31"
-              />
-              <CategoryCard
-                title="Karaoke"
-                iconSrc="https://ext.same-assets.com/1887355265/2759589883.png"
-                href="/category/32"
-              />
-              <CategoryCard
-                title="Sufi"
-                iconSrc="https://ext.same-assets.com/1887355265/3277607109.png"
-                href="/category/33"
-              />
+                return (
+                  <CategoryCard
+                    key={cat.id || index}
+                    title={cat.name}
+                    iconSrc={cat.image}
+                    href={isFirst ? "#" : `/category/${cat.id}`}
+                    onClick={!isFirst ? undefined : () => setShowModal(true)}
+                  />
+                );
+              })}
             </div>
+
           </div>
         </div>
 
         {/* Right Side - Image Grid */}
         <div className="columns-1 sm:columns-2 gap-4">
           <ImageCard src={require("../../asset/Homebanner1.jpg")} size={true} />
-          <ImageCard
-            src={require("../../asset/Homebanner3.jpg")}
-            size={false}
-          />
-          <ImageCard
-            src={require("../../asset/Homebanner22.jpg")}
-            size={false}
-          />
+          <ImageCard src={require("../../asset/Homebanner3.jpg")} size={false} />
+          <ImageCard src={require("../../asset/Homebanner22.jpg")} size={false} />
           <ImageCard src={require("../../asset/Homebanner4.png")} size={true} />
         </div>
       </div>
+
+      {/* Booking Modal */}
       {showModal && (
         <motion.div
           className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50"
@@ -101,43 +92,51 @@ const Hero = () => {
             </button>
             <h2 className="text-lg font-semibold mb-4">Choose Booking Type</h2>
             <div className="flex justify-between gap-4">
-              <Link href="#" className="flex-1" onClick={() => setIsModalOpen(true)}>
-                <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow cursor-pointer transition">
+              <div
+                onClick={() => {
+                  setBookingView("Express Booking");
+                  setIsModalOpen(true);
+                }}
+                className="flex-1 cursor-pointer"
+              >
+                <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow transition">
                   <Image
                     src="https://giggili.com/assets/uploads/media-uploader/express-delivery1734088773.png"
                     alt="Express"
                     width={40}
                     height={40}
-                    onClick={() => {
-                      setBookingView("Express Booking"),
-                      setIsModalOpen(true)}}
                   />
                   <span className="mt-2 text-sm font-medium">
                     Express Booking
                   </span>
                 </div>
-              </Link>
-              <Link href="#" className="flex-1" onClick={() => setIsModalOpen(true)}>
-                <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow cursor-pointer transition">
+              </div>
+
+              <div
+                onClick={() => {
+                  setBookingView("Regular Booking");
+                  setIsModalOpen(true);
+                }}
+                className="flex-1 cursor-pointer"
+              >
+                <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow transition">
                   <Image
                     src="https://giggili.com/assets/uploads/media-uploader/booking1734088770.png"
                     alt="Regular"
                     width={40}
                     height={40}
-                      onClick={() => {
-                      setBookingView("Regular Booking"),
-                      setIsModalOpen(true)}}
                   />
                   <span className="mt-2 text-sm font-medium">
                     Regular Booking
                   </span>
                 </div>
-              </Link>
+              </div>
             </div>
           </motion.div>
         </motion.div>
       )}
 
+      {/* MultiStep Modal */}
       <MultiStepModal
         isOpen={isModalOpen}
         bookingview={bookingview}
@@ -145,12 +144,12 @@ const Hero = () => {
           setIsModalOpen(false);
           router.push("/category/28");
         }}
-        
       />
     </section>
   );
 };
 
+// CategoryCard component
 const CategoryCard = ({
   title,
   iconSrc,
@@ -163,7 +162,7 @@ const CategoryCard = ({
   onClick?: () => void;
 }) => {
   return (
-    <Link href={href} onClick={onClick} className="group">
+    <Link href={href} className="group" onClick={onClick}>
       <motion.div
         whileHover={{ scale: 1.05 }}
         className="flex flex-col items-center justify-center p-3 border border-[#ffffff] rounded-lg bg-white hover:border-[#f97316] transition"
@@ -177,11 +176,11 @@ const CategoryCard = ({
   );
 };
 
+// ImageCard component
 const ImageCard: React.FC<ImageCardProps> = ({ src, size }) => (
   <motion.div
-    className={`relative mb-4 overflow-hidden rounded-lg ${
-      size ? "h-[350px]" : "h-[250px]"
-    }`}
+    className={`relative mb-4 overflow-hidden rounded-lg ${size ? "h-[350px]" : "h-[250px]"
+      }`}
     initial={{ opacity: 0, y: 30 }}
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6 }}

@@ -235,6 +235,7 @@ const CheckoutPage = ({ params }: Props) => {
             payment_gateway: 'razorpay',
             payment_status: 'paid',
             status: '1',
+            paymentStatus:"Confirmed",
             is_order_online: '1',
             transaction_id: response.razorpay_payment_id,
             created_at: new Date().toISOString(),

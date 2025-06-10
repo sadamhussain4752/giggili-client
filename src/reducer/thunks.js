@@ -89,7 +89,7 @@ const UserCreate = `${constant.baseUrl}api/user/register`; //<== register
 const Userlogin = `${constant.baseUrl}api/user/login`;//<== login from
 const Userprofile = `${constant.baseUrl}api/user/userGetById`; //<== User get data from
 const Useraddress = `${constant.baseUrl}api/order/OrderlistById`;
-const UserProductid = `${constant.baseUrl}api/jobposts/jobpost`;
+const UserProductid = `${constant.baseUrl}api/category/categories`;
 const AddCardProductid = `${constant.baseUrl}api/addcart/createCartItem`;
 const GetAddCardProductcard = `${constant.baseUrl}api/addcart/addcartUser`;
 const DelAddCardProductcard = `${constant.baseUrl}api/addcart/deleteCartItem`;
@@ -259,7 +259,7 @@ export const ProductUserById = (body) => async (dispatch) => {
 
   try {
     // Send the POST request with the provided body data
-    const response = await axios.get(`${UserProductid}/${body}`);
+    const response = await axios.get(`${UserProductid}`);
     dispatch(ProductIdSuccess(response.data));
   } catch (error) {
     console.log(error);
