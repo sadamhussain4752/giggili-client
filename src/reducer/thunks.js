@@ -242,6 +242,19 @@ export const VerifyOTPCheck = (body,userId) => async (dispatch) => {
     dispatch(VerifyOTPFailures(error.response.data));
   }
 };
+
+export const ForgotPasswordThunk = (body,userId) => async (dispatch) => {
+  dispatch(VerifyOTPRequests());
+
+  try {
+    // Send the POST request with the provided body data
+    const response = await axios.post(`${VerifyOTPURLs}`,body);
+    dispatch(VerifyOTPSuccesss(response.data));
+  } catch (error) {
+    console.log(error);
+    dispatch(VerifyOTPFailures(error.response.data));
+  }
+};
 export const OrderUserList = (body) => async (dispatch) => {
   dispatch(OrderRequest());
 

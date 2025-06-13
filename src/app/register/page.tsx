@@ -198,7 +198,7 @@ const Register: React.FC = () => {
               type="primary"
               htmlType="submit"
               className='w-25'
-              disabled={!agreed || createUserLoading}
+              disabled={!agreed}
               loading={createUserLoading}
               block
             >

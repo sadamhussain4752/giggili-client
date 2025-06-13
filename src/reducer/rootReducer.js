@@ -29,6 +29,7 @@ const rootReducer = combineReducers({
   jobslistfilter: dataReducer,
   servicelist: dataReducer,
 // getotpres: dataReducer,
+ forgotPassword: dataReducer
 });
 
 export default rootReducer;

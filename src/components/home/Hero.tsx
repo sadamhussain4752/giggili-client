@@ -101,7 +101,7 @@ const Hero = () => {
               >
                 <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow transition">
                   <Image
-                    src="https://giggili.com/assets/uploads/media-uploader/express-delivery1734088773.png"
+                    src={require("../../asset/express-delivery.png")}
                     alt="Express"
                     width={40}
                     height={40}
@@ -121,7 +121,7 @@ const Hero = () => {
               >
                 <div className="flex flex-col items-center p-4 border rounded-lg hover:shadow transition">
                   <Image
-                    src="https://giggili.com/assets/uploads/media-uploader/booking1734088770.png"
+                    src={require("../../asset/booking.png")}
                     alt="Regular"
                     width={40}
                     height={40}

@@ -178,9 +178,9 @@ const Navbar = () => {
                 onMouseEnter={() => setShowMenu(true)}
                 onMouseLeave={() => setShowMenu(false)}
               >
-                <Link href="#" className="flex items-center space-x-2">
+                {getUserResponse?.User.name &&  <Link href="#" className="flex items-center space-x-2">
                   <Image
-                    src={`https://giggili.com/assets/uploads/media-uploader/ruan-richard-rodrigues-pns2rubybng-unsplash-11732845880.jpg`}
+                     src={require("../../asset/profile.png")}
                     alt="Profile"
                     width={40}
                     height={40}
@@ -189,7 +189,8 @@ const Navbar = () => {
                   <span className="text-sm font-medium">
                     {getUserResponse?.User.name}
                   </span>
-                </Link>
+                </Link>}
+               
 
                 {showMenu && (
                   <div className="absolute top-30 right-0 bg-white shadow-md rounded-md p-2 z-50">

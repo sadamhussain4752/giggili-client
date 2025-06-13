@@ -27,7 +27,7 @@ const AboutPage = () => {
             </div>
 
             <div>
-              <h1 className="text-3xl md:text-4xl font-bold mb-6">About Us</h1>
+              <h1 className="text-3xl md:text-4xl font-bold mb-6 text-center">About Us</h1>
               <p className="text-muted-foreground mb-6">
                At GIGGILI, we bring your events to life with rhythm, energy, and unforgettable performances. Our innovative platform seamlessly connects you with top-tier DJs, singers, and dancers, making it easier than ever to book the perfect talent for any occasion.
   <br/>

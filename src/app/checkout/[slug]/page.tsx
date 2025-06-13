@@ -235,7 +235,7 @@ const CheckoutPage = ({ params }: Props) => {
             payment_gateway: 'razorpay',
             payment_status: 'paid',
             status: '1',
-            paymentStatus:"Confirmed",
+            paymentStatus: "Confirmed",
             is_order_online: '1',
             transaction_id: response.razorpay_payment_id,
             created_at: new Date().toISOString(),
@@ -263,34 +263,34 @@ const CheckoutPage = ({ params }: Props) => {
     }
   };
 
-const handleCoupon = () => {
-  const bodyData = {
-    couponCode: couponNumber,
-    userId: getUserResponse.User._id,
+  const handleCoupon = () => {
+    const bodyData = {
+      couponCode: couponNumber,
+      userId: getUserResponse.User._id,
+    };
+    dispatch(ApplyCouponFetch(bodyData));
   };
-  dispatch(ApplyCouponFetch(bodyData));
-};
 
-const calculateDiscount = (total: number): number => {
-  const value = Number(couponValue);
-  if (isNaN(value)) return 0;
+  const calculateDiscount = (total: number): number => {
+    const value = Number(couponValue);
+    if (isNaN(value)) return 0;
 
-  switch (couponType) {
-    case "amount":
-      return value;
-    case "percentage":
-      return (value / 100) * total;
-    case "bogo":
-      return total / 2;
-    default:
-      return 0;
-  }
-};
+    switch (couponType) {
+      case "amount":
+        return value;
+      case "percentage":
+        return (value / 100) * total;
+      case "bogo":
+        return total / 2;
+      default:
+        return 0;
+    }
+  };
 
-const renderDiscount = () => {
-  const discount = calculateDiscount(total);
-  return <span className="text-black">{`${discount.toFixed(2)}`}</span>;
-};
+  const renderDiscount = () => {
+    const discount = calculateDiscount(total);
+    return <span className="text-black">{`${discount.toFixed(2)}`}</span>;
+  };
 
   if (loadinglist) return <Spin tip="Loading Services..." />;
   if (error) return <Result status="error" title="Failed to load services" subTitle={error} />;
@@ -299,7 +299,7 @@ const renderDiscount = () => {
     <div className="min-h-screen bg-white py-10 px-6 md:px-20">
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         {/* Left Side - Form */}
-        <form onSubmit={handleSubmit(handlePayment)} className="space-y-6">
+        <form onSubmit={handleSubmit(handlePayment)} className="space-y-6" id="bookingForm">
           {/* Dropdowns */}
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
@@ -464,14 +464,7 @@ const renderDiscount = () => {
                     Request Call Back
                   </a>
                 </div>
-              ) : (
-                <Button
-                  type="submit"
-                  className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
-                >
-                  Book Now
-                </Button>
-              )
+              ) : null
             ) : (
               <Button
                 type="button"
@@ -545,9 +538,9 @@ const renderDiscount = () => {
 
               <span>{selectedSoundSetup !== null && (
                 <div className="mt-2 text-sm text-gray-600">
-                  <span>Add More Setup</span>
+                  <span>Add on </span>
 
-                  <p className="mt-2 font-semibold">Total Cost: ₹{soundSetups[selectedSoundSetup].label.toLocaleString()}</p>
+                  <p className="mt-2 font-semibold"> {soundSetups[selectedSoundSetup].label.toLocaleString()}</p>
 
                   <ul className="list-disc ml-5">
                     {soundSetups[selectedSoundSetup].details.map((item, i) => (
@@ -579,7 +572,7 @@ const renderDiscount = () => {
 
             <div className="flex justify-between py-3 font-bold text-lg border-t mt-2">
               <span>Total</span>
-            <span>₹{(total - calculateDiscount(total)).toFixed(2)}</span>
+              <span>₹{(total - calculateDiscount(total)).toFixed(2)}</span>
             </div></>}
 
 
@@ -590,6 +583,19 @@ const renderDiscount = () => {
               Apply
             </Button>
           </div>
+          {getUserResponse && getUserResponse.User ? (
+            artist.request_call === "true" ? null : (
+              <Button
+                type="submit"
+                form="bookingForm" // this links the button to the form
+                className="bg-orange-500 hover:bg-orange-600 text-white w-fit mt-4"
+              >
+                Book Now
+              </Button>
+            )
+          ) : (
+            null
+          )}
 
 
 
